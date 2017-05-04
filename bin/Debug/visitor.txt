@@ -1,0 +1,659 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace visitor
+{
+    public class Alcohol : IVisitable
+    {
+        public double Price { get; set; }
+        public string Name { get; set; }
+
+        public Alcohol(double item, string name)
+        {
+            this.Price = item;
+            this.Name = name;
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+           visitor.visit(this);
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace visitor
+{
+    public class Chocolate : IVisitable
+    {
+        
+
+        public double Price { get; set; }
+        public string Name { get; set; }
+
+        public Chocolate(double item, string name)
+        {
+            this.Price = item;
+            this.Name = name;
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.visit(this);
+        }
+
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace visitor
+{
+    public partial class Form1 : Form
+    {
+        ObjectStructure obj;
+        IVisitor visitor;
+
+        string type = " ";
+
+        public Form1()
+        {
+            InitializeComponent();
+            obj = new ObjectStructure();
+            
+        }
+        
+
+        private void btnCalculate_Click(object sender, EventArgs e)
+        {
+
+            if (radioButton1.Checked)
+            {
+                visitor  = new TaxVisitor();
+                obj.Accept(visitor);
+                richTextBox1.Text = " ";
+
+                if (type == "alcohol")
+                {
+                    richTextBox1.Text += visitor.visit(new Alcohol(15, "Vodka"));
+                    richTextBox1.Text += visitor.visit(new Alcohol(15, "Baileys"));
+
+                }
+               else if(type == "chocolate")
+                {
+                    richTextBox1.Text += visitor.visit(new Chocolate(11, "White Truffle Chocolate"));
+                    richTextBox1.Text += visitor.visit(new Chocolate(5, "Ferrero"));
+                }
+                else if(type == "parfume")
+                {
+                    richTextBox1.Text += visitor.visit(new Parfume(50, "Dolce and Gabbana"));
+                    richTextBox1.Text += visitor.visit(new Parfume(30, "Justin Bieber"));
+                }
+                
+
+            }
+            else if (radioButton2.Checked)
+            {
+                visitor = new TaxVacationVisitor();
+                obj.Accept(visitor);
+                richTextBox1.Text = " ";
+
+                if (type == "alcohol")
+                {
+                    richTextBox1.Text += visitor.visit(new Alcohol(15, "Vodka"));
+                    richTextBox1.Text += visitor.visit(new Alcohol(15, "Baileys"));
+
+                }
+                else if (type == "chocolate")
+                {
+                    richTextBox1.Text += visitor.visit(new Chocolate(11, "White Truffle Chocolate"));
+                    richTextBox1.Text += visitor.visit(new Chocolate(5, "Ferrero"));
+                }
+                else if (type == "parfume")
+                {
+                    richTextBox1.Text += visitor.visit(new Parfume(50, "Dolce and Gabbana"));
+                    richTextBox1.Text += visitor.visit(new Parfume(30, "Justin Bieber"));
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("Select one type of tax please.");
+            }
+
+            panel1.Visible = false;
+            pBAlchohol.BorderStyle = BorderStyle.None;
+            pBChocolate.BorderStyle = BorderStyle.None;
+            pBParfume.BorderStyle = BorderStyle.None;
+
+        }
+
+
+        private void pBAlchohol_Click(object sender, EventArgs e)
+        {
+            panel1.Visible = true;
+            type = "alcohol";
+            pBAlchohol.BorderStyle = BorderStyle.Fixed3D;
+
+        }
+
+        private void pBChocolate_Click(object sender, EventArgs e)
+        {
+            panel1.Visible = true;
+            type = "chocolate";
+            pBChocolate.BorderStyle = BorderStyle.Fixed3D;
+        }
+
+        private void pBParfume_Click(object sender, EventArgs e)
+        {
+            panel1.Visible = true;
+            type = "parfume";
+            pBParfume.BorderStyle = BorderStyle.Fixed3D;
+
+        }
+    }
+}
+namespace visitor
+{
+    partial class Form1
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.btnCalculate = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.pBParfume = new System.Windows.Forms.PictureBox();
+            this.pBChocolate = new System.Windows.Forms.PictureBox();
+            this.pBAlchohol = new System.Windows.Forms.PictureBox();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pBParfume)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pBChocolate)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pBAlchohol)).BeginInit();
+            this.panel1.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // btnCalculate
+            // 
+            this.btnCalculate.Location = new System.Drawing.Point(46, 304);
+            this.btnCalculate.Name = "btnCalculate";
+            this.btnCalculate.Size = new System.Drawing.Size(117, 34);
+            this.btnCalculate.TabIndex = 0;
+            this.btnCalculate.Text = "Calculate";
+            this.btnCalculate.UseVisualStyleBackColor = true;
+            this.btnCalculate.Click += new System.EventHandler(this.btnCalculate_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("DK Whale Song", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(160, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(214, 37);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Tax Calculation";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // pBParfume
+            // 
+            this.pBParfume.Image = global::visitor.Properties.Resources.Perfume_Download_PNG;
+            this.pBParfume.Location = new System.Drawing.Point(36, 68);
+            this.pBParfume.Name = "pBParfume";
+            this.pBParfume.Size = new System.Drawing.Size(100, 100);
+            this.pBParfume.TabIndex = 9;
+            this.pBParfume.TabStop = false;
+            this.pBParfume.Click += new System.EventHandler(this.pBParfume_Click);
+            // 
+            // pBChocolate
+            // 
+            this.pBChocolate.Image = global::visitor.Properties.Resources.Chocolate_Transparent;
+            this.pBChocolate.Location = new System.Drawing.Point(198, 68);
+            this.pBChocolate.Name = "pBChocolate";
+            this.pBChocolate.Size = new System.Drawing.Size(100, 100);
+            this.pBChocolate.TabIndex = 8;
+            this.pBChocolate.TabStop = false;
+            this.pBChocolate.Click += new System.EventHandler(this.pBChocolate_Click);
+            // 
+            // pBAlchohol
+            // 
+            this.pBAlchohol.Image = global::visitor.Properties.Resources.bottle_PNG2939;
+            this.pBAlchohol.Location = new System.Drawing.Point(365, 68);
+            this.pBAlchohol.Name = "pBAlchohol";
+            this.pBAlchohol.Size = new System.Drawing.Size(100, 100);
+            this.pBAlchohol.TabIndex = 7;
+            this.pBAlchohol.TabStop = false;
+            this.pBAlchohol.Click += new System.EventHandler(this.pBAlchohol_Click);
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(22, 22);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(101, 21);
+            this.radioButton1.TabIndex = 11;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "Normal Tax";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(22, 49);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(111, 21);
+            this.radioButton2.TabIndex = 12;
+            this.radioButton2.TabStop = true;
+            this.radioButton2.Text = "Vacation Tax";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.LightSeaGreen;
+            this.panel1.Controls.Add(this.radioButton1);
+            this.panel1.Controls.Add(this.radioButton2);
+            this.panel1.Location = new System.Drawing.Point(30, 198);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(153, 100);
+            this.panel1.TabIndex = 13;
+            this.panel1.Visible = false;
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(225, 198);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(260, 165);
+            this.richTextBox1.TabIndex = 15;
+            this.richTextBox1.Text = "";
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.PowderBlue;
+            this.ClientSize = new System.Drawing.Size(517, 375);
+            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pBParfume);
+            this.Controls.Add(this.pBChocolate);
+            this.Controls.Add(this.pBAlchohol);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.btnCalculate);
+            this.Name = "Form1";
+            this.Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)(this.pBParfume)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pBChocolate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pBAlchohol)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Button btnCalculate;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox pBAlchohol;
+        private System.Windows.Forms.PictureBox pBChocolate;
+        private System.Windows.Forms.PictureBox pBParfume;
+        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace visitor
+{
+   public abstract class IVisitable
+    {
+        public abstract void Accept(IVisitor visitor);
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace visitor
+{
+    public interface IVisitor
+    {
+         string visit(Parfume parfumeItem);
+         string visit(Alcohol alcoholItem);
+         string visit(Chocolate chocolateItem);
+        
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace visitor
+{
+    class ObjectStructure
+    {
+        private List<IVisitable> items = new List<IVisitable>();
+        public void Accept(IVisitor visitor)
+        {
+            foreach (IVisitable iv in items)
+            {
+                iv.Accept(visitor);
+            }
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace visitor
+{
+     public class Parfume : IVisitable
+    {
+      
+        public double Price { get; set; }
+        public string Name { get; set; }
+
+        public Parfume(double item, string name)
+        {
+            this.Price = item;
+            this.Name = name;
+        }
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.visit(this);
+        }
+
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace visitor
+{
+    static class Program
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
+        }
+    }
+}
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("visitor")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("visitor")]
+[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+// Setting ComVisible to false makes the types in this assembly not visible 
+// to COM components.  If you need to access a type in this assembly from 
+// COM, set the ComVisible attribute to true on that type.
+[assembly: ComVisible(false)]
+
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("f4135eba-db0a-4e0d-bf8e-6a6f667d85ec")]
+
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Build and Revision Numbers 
+// by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+namespace visitor.Properties {
+    using System;
+    
+    
+    /// <summary>
+    ///   A strongly-typed resource class, for looking up localized strings, etc.
+    /// </summary>
+    // This class was auto-generated by the StronglyTypedResourceBuilder
+    // class via a tool like ResGen or Visual Studio.
+    // To add or remove a member, edit your .ResX file then rerun ResGen
+    // with the /str option, or rebuild your VS project.
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    internal class Resources {
+        
+        private static global::System.Resources.ResourceManager resourceMan;
+        
+        private static global::System.Globalization.CultureInfo resourceCulture;
+        
+        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        internal Resources() {
+        }
+        
+        /// <summary>
+        ///   Returns the cached ResourceManager instance used by this class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("visitor.Properties.Resources", typeof(Resources).Assembly);
+                    resourceMan = temp;
+                }
+                return resourceMan;
+            }
+        }
+        
+        /// <summary>
+        ///   Overrides the current thread's CurrentUICulture property for all
+        ///   resource lookups using this strongly typed resource class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Globalization.CultureInfo Culture {
+            get {
+                return resourceCulture;
+            }
+            set {
+                resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bottle_PNG2939 {
+            get {
+                object obj = ResourceManager.GetObject("bottle_PNG2939", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Chocolate_Transparent {
+            get {
+                object obj = ResourceManager.GetObject("Chocolate-Transparent", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Perfume_Download_PNG {
+            get {
+                object obj = ResourceManager.GetObject("Perfume-Download-PNG", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+    }
+}
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+namespace visitor.Properties
+{
+
+
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
+    {
+
+        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+
+        public static Settings Default
+        {
+            get
+            {
+                return defaultInstance;
+            }
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace visitor
+{
+   public class TaxVacationVisitor : IVisitor
+    {
+        public string visit(Chocolate chocolateItem)
+        {
+            return chocolateItem.Name + "\n Original price = " + chocolateItem.Price + "\nTotal Price + Tax) = " + (chocolateItem.Price * 0.02 + chocolateItem.Price) + "\n---------------------------\n";
+        }
+
+        public string visit(Alcohol alcoholItem)
+        {
+            return alcoholItem.Name + "\nOriginal price = " + alcoholItem.Price + "\nPrice + Tax = " + (alcoholItem.Price * 0.05+ alcoholItem.Price) + "\n---------------------------\n";
+        }
+
+        public string visit(Parfume parfumeItem)
+        {
+            return parfumeItem.Name + "\n Original price = " + parfumeItem.Price + "\nPrice + Tax = " + (parfumeItem.Price * 0.07 + parfumeItem.Price) + "\n---------------------------\n";
+        }
+
+
+
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace visitor
+{
+   public class TaxVisitor : IVisitor
+    {
+
+        public string visit(Chocolate chocolateItem)
+        {
+            return chocolateItem.Name + "\n Original price = " + chocolateItem.Price+  "\n Price + Tax = " + (chocolateItem.Price* 0.01 + chocolateItem.Price) + "\n---------------------------\n";
+        }
+
+        public string visit(Alcohol alcoholItem)
+        {
+            return alcoholItem.Name + "\nOriginal price = " + alcoholItem.Price + "\n Price + Tax = " + (alcoholItem.Price * 0.025 + alcoholItem.Price ) + "\n---------------------------\n";
+        }
+
+        public string visit(Parfume parfumeItem)
+        {
+            return parfumeItem.Name + "\n Original price = " + parfumeItem.Price + "\n Price + Tax = " + (parfumeItem.Price * 0.035 + parfumeItem.Price) + "\n---------------------------\n";
+        }
+
+
+    }
+}

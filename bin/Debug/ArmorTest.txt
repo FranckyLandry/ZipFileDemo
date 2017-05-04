@@ -1,0 +1,715 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArmorTest
+{
+    public abstract class Armor : IArmor
+    {
+        public abstract double Durability { get; set; }
+
+        public abstract void Repair();
+
+        public abstract void Tank(Projectile p);
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArmorTest
+{
+    public class Bullet : Projectile
+    {
+        public override double TrueDamage { get; set; }
+
+        public Bullet()
+        {
+            TrueDamage = 75;
+            rnjesus = new Random();
+        }
+
+        public override void Damage(LightArmor la)
+        {
+            la.Durability -= (TrueDamage * (rnjesus.Next(85, 101))) / 100;
+        }
+
+        public override void Damage(HeavyArmor ha)
+        {
+            ha.Durability -= (TrueDamage * (rnjesus.Next(40, 81))) / 100;
+        }
+
+        public override void Damage(ReflectiveArmor ra)
+        {
+            //cannot penetrate this type of armor
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArmorTest
+{
+    public class DeadException : Exception
+    {
+        public DeadException(string message) : base(message)
+        {
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ArmorTest
+{
+    public partial class Form1 : Form
+    {
+        private Armor armor;
+        private Projectile proj;
+        public Form1()
+        {
+            InitializeComponent();
+            armor = new LightArmor();
+            ShowArmor();
+        }
+
+        private void ShowArmor()
+        {
+            tbArmor.Text = armor.Durability.ToString();
+        }
+
+        private void btBullet_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                armor.Tank(new Bullet());
+            }
+            catch (DeadException ex)
+            {
+                DisableButtons();
+                MessageBox.Show(ex.Message);
+            }
+            finally { ShowArmor(); }
+        }
+
+        private void btRocket_Click(object sender, EventArgs e)
+        {
+            try { 
+                armor.Tank(new Rocket());
+            }
+            catch (DeadException ex)
+            {
+                DisableButtons();
+                MessageBox.Show(ex.Message);
+            }
+            finally { ShowArmor(); }
+        }
+
+        private void btLazer_Click(object sender, EventArgs e)
+        {
+            try { 
+                armor.Tank(new Laser());
+            }
+            catch (DeadException ex)
+            {
+                DisableButtons();
+                MessageBox.Show(ex.Message);
+            }
+            finally { ShowArmor(); }
+        }
+
+        private void btRepair_Click(object sender, EventArgs e)
+        {
+            armor.Repair();
+            ShowArmor();
+            EnableButton();
+        }
+
+        private void rbLight_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbHeavy.Checked)
+            {
+                armor = new HeavyArmor();
+            }
+            else if (rbLight.Checked)
+            {
+                armor = new LightArmor();
+            }
+            else
+            {
+                armor = new ReflectiveArmor();
+            }
+            ShowArmor();
+            EnableButton();
+        }
+
+        private void DisableButtons()
+        {
+            btBullet.Enabled = false;
+            btLazer.Enabled = false;
+            btRocket.Enabled = false;
+        }
+
+        private void EnableButton()
+        {
+            btBullet.Enabled = true;
+            btLazer.Enabled = true;
+            btRocket.Enabled = true;
+        }
+    }
+}
+namespace ArmorTest
+{
+    partial class Form1
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.rbLight = new System.Windows.Forms.RadioButton();
+            this.rbHeavy = new System.Windows.Forms.RadioButton();
+            this.rbReflective = new System.Windows.Forms.RadioButton();
+            this.lbArmor = new System.Windows.Forms.Label();
+            this.tbArmor = new System.Windows.Forms.TextBox();
+            this.btBullet = new System.Windows.Forms.Button();
+            this.btRocket = new System.Windows.Forms.Button();
+            this.btLazer = new System.Windows.Forms.Button();
+            this.btRepair = new System.Windows.Forms.Button();
+            this.SuspendLayout();
+            // 
+            // rbLight
+            // 
+            this.rbLight.AutoSize = true;
+            this.rbLight.Checked = true;
+            this.rbLight.Location = new System.Drawing.Point(12, 12);
+            this.rbLight.Name = "rbLight";
+            this.rbLight.Size = new System.Drawing.Size(101, 21);
+            this.rbLight.TabIndex = 0;
+            this.rbLight.TabStop = true;
+            this.rbLight.Text = "Light armor";
+            this.rbLight.UseVisualStyleBackColor = true;
+            this.rbLight.CheckedChanged += new System.EventHandler(this.rbLight_CheckedChanged);
+            // 
+            // rbHeavy
+            // 
+            this.rbHeavy.AutoSize = true;
+            this.rbHeavy.Location = new System.Drawing.Point(119, 12);
+            this.rbHeavy.Name = "rbHeavy";
+            this.rbHeavy.Size = new System.Drawing.Size(110, 21);
+            this.rbHeavy.TabIndex = 1;
+            this.rbHeavy.TabStop = true;
+            this.rbHeavy.Text = "Heavy armor";
+            this.rbHeavy.UseVisualStyleBackColor = true;
+            this.rbHeavy.CheckedChanged += new System.EventHandler(this.rbLight_CheckedChanged);
+            // 
+            // rbReflective
+            // 
+            this.rbReflective.AutoSize = true;
+            this.rbReflective.Location = new System.Drawing.Point(235, 12);
+            this.rbReflective.Name = "rbReflective";
+            this.rbReflective.Size = new System.Drawing.Size(132, 21);
+            this.rbReflective.TabIndex = 2;
+            this.rbReflective.TabStop = true;
+            this.rbReflective.Text = "Reflective armor";
+            this.rbReflective.UseVisualStyleBackColor = true;
+            this.rbReflective.CheckedChanged += new System.EventHandler(this.rbLight_CheckedChanged);
+            // 
+            // lbArmor
+            // 
+            this.lbArmor.AutoSize = true;
+            this.lbArmor.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbArmor.Location = new System.Drawing.Point(64, 54);
+            this.lbArmor.Name = "lbArmor";
+            this.lbArmor.Size = new System.Drawing.Size(71, 25);
+            this.lbArmor.TabIndex = 3;
+            this.lbArmor.Text = "Armor:";
+            // 
+            // tbArmor
+            // 
+            this.tbArmor.Enabled = false;
+            this.tbArmor.Location = new System.Drawing.Point(172, 57);
+            this.tbArmor.Name = "tbArmor";
+            this.tbArmor.Size = new System.Drawing.Size(100, 22);
+            this.tbArmor.TabIndex = 4;
+            // 
+            // btBullet
+            // 
+            this.btBullet.Location = new System.Drawing.Point(12, 113);
+            this.btBullet.Name = "btBullet";
+            this.btBullet.Size = new System.Drawing.Size(87, 47);
+            this.btBullet.TabIndex = 5;
+            this.btBullet.Text = "Bullet";
+            this.btBullet.UseVisualStyleBackColor = true;
+            this.btBullet.Click += new System.EventHandler(this.btBullet_Click);
+            // 
+            // btRocket
+            // 
+            this.btRocket.Location = new System.Drawing.Point(142, 113);
+            this.btRocket.Name = "btRocket";
+            this.btRocket.Size = new System.Drawing.Size(87, 47);
+            this.btRocket.TabIndex = 6;
+            this.btRocket.Text = "Rocket";
+            this.btRocket.UseVisualStyleBackColor = true;
+            this.btRocket.Click += new System.EventHandler(this.btRocket_Click);
+            // 
+            // btLazer
+            // 
+            this.btLazer.Location = new System.Drawing.Point(270, 113);
+            this.btLazer.Name = "btLazer";
+            this.btLazer.Size = new System.Drawing.Size(87, 47);
+            this.btLazer.TabIndex = 7;
+            this.btLazer.Text = "Lazer";
+            this.btLazer.UseVisualStyleBackColor = true;
+            this.btLazer.Click += new System.EventHandler(this.btLazer_Click);
+            // 
+            // btRepair
+            // 
+            this.btRepair.Image = global::ArmorTest.Properties.Resources.wrench;
+            this.btRepair.Location = new System.Drawing.Point(299, 50);
+            this.btRepair.Name = "btRepair";
+            this.btRepair.Size = new System.Drawing.Size(40, 40);
+            this.btRepair.TabIndex = 8;
+            this.btRepair.UseVisualStyleBackColor = true;
+            this.btRepair.Click += new System.EventHandler(this.btRepair_Click);
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(369, 176);
+            this.Controls.Add(this.btRepair);
+            this.Controls.Add(this.btLazer);
+            this.Controls.Add(this.btRocket);
+            this.Controls.Add(this.btBullet);
+            this.Controls.Add(this.tbArmor);
+            this.Controls.Add(this.lbArmor);
+            this.Controls.Add(this.rbReflective);
+            this.Controls.Add(this.rbHeavy);
+            this.Controls.Add(this.rbLight);
+            this.Name = "Form1";
+            this.Text = "Form1";
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.RadioButton rbLight;
+        private System.Windows.Forms.RadioButton rbHeavy;
+        private System.Windows.Forms.RadioButton rbReflective;
+        private System.Windows.Forms.Label lbArmor;
+        private System.Windows.Forms.TextBox tbArmor;
+        private System.Windows.Forms.Button btBullet;
+        private System.Windows.Forms.Button btRocket;
+        private System.Windows.Forms.Button btLazer;
+        private System.Windows.Forms.Button btRepair;
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArmorTest
+{
+    public class HeavyArmor : Armor
+    {
+        public override double Durability { get; set; }
+
+        public HeavyArmor()
+        {
+            Durability = 1000;
+        }
+
+        public override void Repair()
+        {
+            Durability = 1000;
+        }
+
+        public override void Tank(Projectile p)
+        {
+            p.Damage(this);
+            if(Durability <= 0)
+            {
+                throw new DeadException("You are dead! Please repair the armor or choose another one!");
+            }
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArmorTest
+{
+    interface IArmor
+    {
+        void Tank(Projectile p);
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArmorTest
+{
+    public interface IProjectile
+    {
+        void Damage(LightArmor la);
+        void Damage(HeavyArmor ha);
+        void Damage(ReflectiveArmor ra);
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArmorTest
+{
+    public class Laser : Projectile
+    {
+        public override double TrueDamage { get; set; }
+
+        public Laser()
+        {
+            TrueDamage = 300;
+            rnjesus = new Random();
+        }
+
+        public override void Damage(LightArmor la)
+        {
+            la.Durability -= (TrueDamage * (rnjesus.Next(99, 131))) / 100;
+        }
+
+        public override void Damage(HeavyArmor ha)
+        {
+            ha.Durability -= (TrueDamage * (rnjesus.Next(85, 101))) / 100;
+        }
+
+        public override void Damage(ReflectiveArmor ra)
+        {
+            //this type of armor reflects lazers
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArmorTest
+{
+    public class LightArmor : Armor
+    {
+        public override double Durability { get; set; }
+
+        public LightArmor() { Durability = 500; }
+
+        public override void Repair()
+        {
+            Durability = 500;
+        }
+
+        public override void Tank(Projectile p)
+        {
+            p.Damage(this);
+            if (Durability <= 0)
+            {
+                throw new DeadException("You are dead! Please repair the armor or choose another one!");
+            }
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ArmorTest
+{
+    static class Program
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArmorTest
+{
+    public abstract class Projectile : IProjectile
+    {
+        protected Random rnjesus;
+        public abstract double TrueDamage { get; set; }
+
+        public abstract void Damage(LightArmor la);
+
+        public abstract void Damage(HeavyArmor ha);
+
+        public abstract void Damage(ReflectiveArmor ra);
+    }
+}
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+// General Information about an assembly is controlled through the following
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("ArmorTest")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("ArmorTest")]
+[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+// Setting ComVisible to false makes the types in this assembly not visible
+// to COM components.  If you need to access a type in this assembly from
+// COM, set the ComVisible attribute to true on that type.
+[assembly: ComVisible(false)]
+
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("a928d60f-3d64-4115-98d6-0e4016f5ef81")]
+
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Build and Revision Numbers
+// by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+namespace ArmorTest.Properties {
+    using System;
+    
+    
+    /// <summary>
+    ///   A strongly-typed resource class, for looking up localized strings, etc.
+    /// </summary>
+    // This class was auto-generated by the StronglyTypedResourceBuilder
+    // class via a tool like ResGen or Visual Studio.
+    // To add or remove a member, edit your .ResX file then rerun ResGen
+    // with the /str option, or rebuild your VS project.
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    internal class Resources {
+        
+        private static global::System.Resources.ResourceManager resourceMan;
+        
+        private static global::System.Globalization.CultureInfo resourceCulture;
+        
+        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        internal Resources() {
+        }
+        
+        /// <summary>
+        ///   Returns the cached ResourceManager instance used by this class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ArmorTest.Properties.Resources", typeof(Resources).Assembly);
+                    resourceMan = temp;
+                }
+                return resourceMan;
+            }
+        }
+        
+        /// <summary>
+        ///   Overrides the current thread's CurrentUICulture property for all
+        ///   resource lookups using this strongly typed resource class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Globalization.CultureInfo Culture {
+            get {
+                return resourceCulture;
+            }
+            set {
+                resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap wrench {
+            get {
+                object obj = ResourceManager.GetObject("wrench", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+    }
+}
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+namespace ArmorTest.Properties
+{
+
+
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
+    {
+
+        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+
+        public static Settings Default
+        {
+            get
+            {
+                return defaultInstance;
+            }
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArmorTest
+{
+    public class ReflectiveArmor : Armor
+    {
+        public override double Durability { get; set; }
+
+        public ReflectiveArmor()
+        {
+            Durability = 1500;
+        }
+
+        public override void Repair()
+        {
+            Durability = 1500;
+        }
+
+        public override void Tank(Projectile p)
+        {
+            p.Damage(this);
+            if (Durability <= 0)
+            {
+                throw new DeadException("You are dead! Please repair the armor or choose another one!");
+            }
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArmorTest
+{
+    public class Rocket : Projectile
+    {
+        public override double TrueDamage { get; set; }
+
+        public Rocket()
+        {
+            TrueDamage = 150;
+            rnjesus = new Random();
+        }
+
+        public override void Damage(LightArmor la)
+        {
+            la.Durability -= (TrueDamage * (rnjesus.Next(100, 126))) / 100;
+        }
+
+        public override void Damage(HeavyArmor ha)
+        {
+            ha.Durability -= (TrueDamage * (rnjesus.Next(70, 91))) / 100;
+        }
+
+        public override void Damage(ReflectiveArmor ra)
+        {
+            ra.Durability -= (TrueDamage * (rnjesus.Next(50, 81))) / 100;
+        }
+    }
+}

@@ -1,0 +1,607 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace AbstractFactoryAssignment
+{
+    public partial class Form1 : Form
+    {
+
+        GenericGame game = new GenericGame();
+        IFactory smurfFactory = new SmurfFactory();
+        IFactory minionFactory = new MinionFactory();
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+
+
+        private void btnEat_Click(object sender, EventArgs e)
+        {
+            timer1.Start();
+            game.Eat = true;
+
+            
+        }
+
+        private void btSmurfWalk_Click(object sender, EventArgs e)
+        {
+            timer1.Start();
+            game.Walk = true;
+
+
+        }
+
+        private void btReset_Click(object sender, EventArgs e)
+        {
+            game.StopGame();
+            btnRun.Enabled = true;
+            lbGame.Items.Clear();
+            timer1.Stop();
+        }
+
+        private void btnRun_Click(object sender, EventArgs e)
+        {
+            btnRun.Enabled = false;
+            timer1.Start();
+            if (rbSmurf.Checked)
+            {
+                game.Run(smurfFactory);
+            }
+            if (rbMinion.Checked)
+            {
+                game.Run(minionFactory);
+            }
+        }
+
+        private void btnJump_Click(object sender, EventArgs e)
+        {
+            timer1.Start();
+            game.Jump = true;
+
+            
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (game.gameOver == false)
+            {
+                try
+                {
+                    if (rbSmurf.Checked)
+                    {
+                        game.Run(smurfFactory);
+                        lbGame.Items.Add(game.figures[game.figures.Count() - 1]);
+                    }
+                    if (rbMinion.Checked)
+                    {
+                        game.Run(minionFactory);
+                        lbGame.Items.Add(game.figures[game.figures.Count() - 1]);
+                    }
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    if (rbSmurf.Checked)
+                    {
+                        game.Run(smurfFactory);
+                    }
+                    if (rbMinion.Checked)
+                    {
+                        game.Run(minionFactory);
+                    }
+                }
+                timer1.Stop();
+            }
+        }
+    }
+}
+namespace AbstractFactoryAssignment
+{
+    partial class Form1
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            this.btnJump = new System.Windows.Forms.Button();
+            this.btnEat = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnRun = new System.Windows.Forms.Button();
+            this.btReset = new System.Windows.Forms.Button();
+            this.lbGame = new System.Windows.Forms.ListBox();
+            this.btnWalk = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.rbSmurf = new System.Windows.Forms.RadioButton();
+            this.rbMinion = new System.Windows.Forms.RadioButton();
+            this.groupBox1.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // btnJump
+            // 
+            this.btnJump.Location = new System.Drawing.Point(285, 17);
+            this.btnJump.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnJump.Name = "btnJump";
+            this.btnJump.Size = new System.Drawing.Size(58, 41);
+            this.btnJump.TabIndex = 0;
+            this.btnJump.Text = "jump";
+            this.btnJump.UseVisualStyleBackColor = true;
+            this.btnJump.Click += new System.EventHandler(this.btnJump_Click);
+            // 
+            // btnEat
+            // 
+            this.btnEat.Location = new System.Drawing.Point(285, 62);
+            this.btnEat.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnEat.Name = "btnEat";
+            this.btnEat.Size = new System.Drawing.Size(58, 41);
+            this.btnEat.TabIndex = 1;
+            this.btnEat.Text = "eat";
+            this.btnEat.UseVisualStyleBackColor = true;
+            this.btnEat.Click += new System.EventHandler(this.btnEat_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.btnRun);
+            this.groupBox1.Controls.Add(this.btReset);
+            this.groupBox1.Controls.Add(this.lbGame);
+            this.groupBox1.Controls.Add(this.btnJump);
+            this.groupBox1.Controls.Add(this.btnWalk);
+            this.groupBox1.Controls.Add(this.btnEat);
+            this.groupBox1.Location = new System.Drawing.Point(185, 5);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Size = new System.Drawing.Size(390, 227);
+            this.groupBox1.TabIndex = 2;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Game";
+            // 
+            // btnRun
+            // 
+            this.btnRun.Location = new System.Drawing.Point(32, 29);
+            this.btnRun.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnRun.Name = "btnRun";
+            this.btnRun.Size = new System.Drawing.Size(54, 48);
+            this.btnRun.TabIndex = 9;
+            this.btnRun.Text = "Run";
+            this.btnRun.UseVisualStyleBackColor = true;
+            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
+            // 
+            // btReset
+            // 
+            this.btReset.Location = new System.Drawing.Point(32, 81);
+            this.btReset.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btReset.Name = "btReset";
+            this.btReset.Size = new System.Drawing.Size(54, 48);
+            this.btReset.TabIndex = 8;
+            this.btReset.Text = "Stop";
+            this.btReset.UseVisualStyleBackColor = true;
+            this.btReset.Click += new System.EventHandler(this.btReset_Click);
+            // 
+            // lbGame
+            // 
+            this.lbGame.FormattingEnabled = true;
+            this.lbGame.Location = new System.Drawing.Point(110, 17);
+            this.lbGame.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.lbGame.Name = "lbGame";
+            this.lbGame.Size = new System.Drawing.Size(162, 212);
+            this.lbGame.TabIndex = 1;
+            // 
+            // btnWalk
+            // 
+            this.btnWalk.Location = new System.Drawing.Point(285, 107);
+            this.btnWalk.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnWalk.Name = "btnWalk";
+            this.btnWalk.Size = new System.Drawing.Size(58, 41);
+            this.btnWalk.TabIndex = 7;
+            this.btnWalk.Text = "walk";
+            this.btnWalk.UseVisualStyleBackColor = true;
+            this.btnWalk.Click += new System.EventHandler(this.btSmurfWalk_Click);
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 10;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // rbSmurf
+            // 
+            this.rbSmurf.AutoSize = true;
+            this.rbSmurf.Location = new System.Drawing.Point(65, 64);
+            this.rbSmurf.Name = "rbSmurf";
+            this.rbSmurf.Size = new System.Drawing.Size(83, 17);
+            this.rbSmurf.TabIndex = 3;
+            this.rbSmurf.TabStop = true;
+            this.rbSmurf.Text = "Smurf Game";
+            this.rbSmurf.UseVisualStyleBackColor = true;
+            // 
+            // rbMinion
+            // 
+            this.rbMinion.AutoSize = true;
+            this.rbMinion.Location = new System.Drawing.Point(65, 87);
+            this.rbMinion.Name = "rbMinion";
+            this.rbMinion.Size = new System.Drawing.Size(84, 17);
+            this.rbMinion.TabIndex = 4;
+            this.rbMinion.TabStop = true;
+            this.rbMinion.Text = "MinionGame";
+            this.rbMinion.UseVisualStyleBackColor = true;
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(627, 243);
+            this.Controls.Add(this.rbMinion);
+            this.Controls.Add(this.rbSmurf);
+            this.Controls.Add(this.groupBox1);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Name = "Form1";
+            this.Text = "Form1";
+            this.groupBox1.ResumeLayout(false);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Button btnJump;
+        private System.Windows.Forms.Button btnEat;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.ListBox lbGame;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Button btnWalk;
+        private System.Windows.Forms.Button btReset;
+        private System.Windows.Forms.Button btnRun;
+        private System.Windows.Forms.RadioButton rbSmurf;
+        private System.Windows.Forms.RadioButton rbMinion;
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AbstractFactoryAssignment
+{
+    class GenericGame
+    {
+        public Boolean gameOver = false;
+
+        public List<String> figures = new List<String>();
+        public bool Walk, Jump, Eat = false;
+
+
+        public void Run(IFactory f)
+        {
+          
+          gameOver = false;
+          if(gameOver == false)
+         {
+
+                IFigures figure = f.CreateFigure();
+                if (Eat == true)
+                {
+                    figure.Eat();
+                    Eat = false;
+                }
+                else if (Jump == true)
+                {
+                    figures.Add(figure.Jump());
+                    Jump = false;
+                }
+                else if (Walk == true)
+                {
+                    figures.Add(figure.Walk());
+                    Walk = false;
+                }
+          }
+
+        }
+
+        public void StopGame()
+        {
+            gameOver = true;
+            figures.Clear();
+            
+        }
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AbstractFactoryAssignment
+{
+    interface IFactory
+    {
+         IFigures CreateFigure();
+        
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AbstractFactoryAssignment
+{
+    interface IFigures
+    {
+        String Jump();
+        String Walk();
+        String Eat();
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AbstractFactoryAssignment
+{
+    class Minion : IFigures
+    {
+
+        public String Jump()
+        {
+            return "Minion Jump";
+        }
+        public String Walk()
+        {
+            return "Minion Walk";
+        }
+        public String Eat()
+        {
+            return "Minion Eat";
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AbstractFactoryAssignment
+{
+    class MinionFactory: IFactory
+    {
+        public IFigures CreateFigure()
+        {
+            return (new Minion());
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace AbstractFactoryAssignment
+{
+    static class Program
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
+        }
+    }
+}
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("AbstractFactoryAssignment")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("AbstractFactoryAssignment")]
+[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+// Setting ComVisible to false makes the types in this assembly not visible 
+// to COM components.  If you need to access a type in this assembly from 
+// COM, set the ComVisible attribute to true on that type.
+[assembly: ComVisible(false)]
+
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("6c0a2f22-d8e2-4d29-b8bc-148b5b16c011")]
+
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Build and Revision Numbers 
+// by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+namespace AbstractFactoryAssignment.Properties
+{
+
+
+    /// <summary>
+    ///   A strongly-typed resource class, for looking up localized strings, etc.
+    /// </summary>
+    // This class was auto-generated by the StronglyTypedResourceBuilder
+    // class via a tool like ResGen or Visual Studio.
+    // To add or remove a member, edit your .ResX file then rerun ResGen
+    // with the /str option, or rebuild your VS project.
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    internal class Resources
+    {
+
+        private static global::System.Resources.ResourceManager resourceMan;
+
+        private static global::System.Globalization.CultureInfo resourceCulture;
+
+        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        internal Resources()
+        {
+        }
+
+        /// <summary>
+        ///   Returns the cached ResourceManager instance used by this class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Resources.ResourceManager ResourceManager
+        {
+            get
+            {
+                if ((resourceMan == null))
+                {
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AbstractFactoryAssignment.Properties.Resources", typeof(Resources).Assembly);
+                    resourceMan = temp;
+                }
+                return resourceMan;
+            }
+        }
+
+        /// <summary>
+        ///   Overrides the current thread's CurrentUICulture property for all
+        ///   resource lookups using this strongly typed resource class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Globalization.CultureInfo Culture
+        {
+            get
+            {
+                return resourceCulture;
+            }
+            set
+            {
+                resourceCulture = value;
+            }
+        }
+    }
+}
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+namespace AbstractFactoryAssignment.Properties
+{
+
+
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
+    {
+
+        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+
+        public static Settings Default
+        {
+            get
+            {
+                return defaultInstance;
+            }
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AbstractFactoryAssignment
+{
+    class Smurf : IFigures
+    {
+        public String Jump() {
+            return "Smurf Jump";
+        }
+        public String Walk() {
+            return "Smurf Walk";
+        }
+        public String Eat() {
+            return "Smurf Eat";
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AbstractFactoryAssignment
+{
+    class SmurfFactory : IFactory
+    {
+        public IFigures CreateFigure()
+        {
+            return (new Smurf());
+        }
+    }
+}

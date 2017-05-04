@@ -1,0 +1,873 @@
+﻿using LaptopProduction.concreteParts;
+using LaptopProduction.parts;
+
+namespace LaptopProduction
+{
+    public class DellFactory : IFactory
+    {
+        public IHighEndLaptop ProduceHighEndLaptop()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEconomicalLaptop ProductEconomicalLaptop()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+}using LaptopProduction.parts;
+
+namespace LaptopProduction
+{
+    public class EconomicalFactory : ILaptopFactory
+    {
+        public IPart CreateCpu()
+        {
+            return new AmdQuad();
+        }
+
+        public IPart CreateMemory()
+        {
+            return new Ram4G();
+        }
+
+        public IPart CreateGraphics()
+        {
+            return new AmdIntegrated();
+        }
+
+        public IPart CreateStorage()
+        {
+            return new HardDrive1T();
+        }
+    }
+}
+namespace LaptopProduction
+{
+    public class EconomicalLaptop : Laptop
+    {
+        public EconomicalLaptop(ILaptopFactory laptopFactory) : base(laptopFactory)
+        {
+            Name = "Economical Laptop";
+        }
+    }
+}
+using LaptopProduction.parts;
+
+namespace LaptopProduction
+{
+    public class GamingFactory : ILaptopFactory
+    {
+        public IPart CreateCpu()
+        {
+            return new CpuIntel7Quad();
+        }
+
+        public IPart CreateMemory()
+        {
+            return new Ram8G();
+        }
+
+        public IPart CreateGraphics()
+        {
+            return new Geforce6G();
+        }
+
+        public IPart CreateStorage()
+        {
+            return new HardDriveHybrid();
+        }
+    }
+}
+namespace LaptopProduction
+{
+    public class GamingLaptop : Laptop
+    {
+        public GamingLaptop(ILaptopFactory laptopFactory) : base(laptopFactory)
+        {
+            Name = "Gaming Laptop";
+        }
+    }
+}
+using LaptopProduction.parts;
+
+namespace LaptopProduction
+{
+    public class HighEndFactory : ILaptopFactory
+    {
+        public IPart CreateCpu()
+        {
+            return new CpuIntel6Quad();
+        }
+
+        public IPart CreateMemory()
+        {
+            return new Ram16G();
+        }
+
+        public IPart CreateGraphics()
+        {
+            return new Geforce4G();
+        }
+
+        public IPart CreateStorage()
+        {
+            return new Ssd256G();
+        }
+    }
+}
+namespace LaptopProduction
+{
+    public class HighEndLaptop : Laptop
+    {
+        public HighEndLaptop(ILaptopFactory laptopFactory) : base(laptopFactory)
+        {
+            Name = "High-end Home Laptop";
+        }
+    }
+}
+namespace LaptopProduction
+{
+    public interface IEconomicalLaptop
+    {
+//        public IEconomicalLaptop(IFactory laptopFactory) : base(laptopFactory)
+//        {
+//        }
+//
+//        public override void PrepareSpecificParts()
+//        {
+//            Ssd = LaptopFactory.AddSsd();
+//            ProgressMsg += "Solid State Drive: " + Ssd.Name + "\n\n";
+//            DescreteGraphics = LaptopFactory.AddDiscreteGraphics();
+//            ProgressMsg += "Discrete Graphic Card: " + DescreteGraphics.Name + "\n\n";
+//        }
+    }
+}
+using LaptopProduction.parts;
+
+namespace LaptopProduction
+{
+    public interface IFactory
+    {
+        IHighEndLaptop ProduceHighEndLaptop();
+        IEconomicalLaptop ProductEconomicalLaptop();
+    }
+}
+using LaptopProduction.concreteParts;
+
+namespace LaptopProduction
+{
+    public interface IHighEndLaptop
+    {
+//        public HighEndLaptop(ILaptopFactory laptopFactory) : base(laptopFactory)
+//        {
+//        }
+//
+//        public override void PrepareSpecificParts()
+//        {
+//            Storage = LaptopFactory.CreateHardDrive();
+//            ProgressMsg += "Hard Drive: " + Storage.Name + "\n\n";
+//        }
+    }
+}
+using LaptopProduction.parts;
+
+namespace LaptopProduction
+{
+    public interface ILaptopFactory
+    {
+        IPart CreateCpu();
+        IPart CreateMemory();
+        IPart CreateGraphics();
+        IPart CreateStorage();
+    }
+}
+using LaptopProduction.parts;
+
+namespace LaptopProduction
+{
+    public class Laptop
+    {
+        public string Name { get; set; }
+        public string Msg { get; set; }
+        public IPart Cpu { get; set; }
+        public IPart Memory { get; set; }
+        public IPart Graphics { get; set; }
+        public IPart Storage { get; set; }
+        public ILaptopFactory LaptopFactory { get; }
+
+        public Laptop(ILaptopFactory laptopFactory)
+        {
+            LaptopFactory = laptopFactory;
+        }
+
+        public void BuildLaptop()
+        {
+            Cpu = LaptopFactory.CreateCpu();
+            Msg += "CPU: " + Cpu.Name + "\n\n";
+            Memory = LaptopFactory.CreateMemory();
+            Msg += "Memory: " + Memory.Name + "\n\n";
+            Graphics = LaptopFactory.CreateGraphics();
+            Msg += "Video Card: " + Graphics.Name + "\n\n";
+            Storage = LaptopFactory.CreateStorage();
+            Msg += "Hard Drive: " + Storage.Name + "\n\n";
+        }
+
+        public void Assemble()
+        {
+            Msg += "Assembling your " + Name + "\n\n";
+        }
+
+        public void Packaging()
+        {
+            Msg += "Packaging your " + Name + "\n\n";
+        }
+
+        public override string ToString()
+        {
+            Msg += "Product completed!";
+            return Msg;
+        }
+    }
+}
+using System;
+using System.Windows.Forms;
+
+namespace LaptopProduction
+{
+    public partial class LaptopOrdering : Form
+    {
+        private readonly LaptopStore _store;
+
+        public LaptopOrdering()
+        {
+            InitializeComponent();
+            cbLaptopType.DataSource = Enum.GetValues(typeof(LaptopType));
+            _store = new LaptopStore();
+        }
+
+        private void btnOrder_Click(object sender, EventArgs e)
+        {
+            LaptopType laptopType = (LaptopType)cbLaptopType.SelectedItem;
+
+            _store.OrderLaptop(laptopType);
+
+            rtbInfo.Text = _store.Laptop.ToString();
+        }
+    }
+}
+namespace LaptopProduction
+{
+    partial class LaptopOrdering
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.btnOrder = new System.Windows.Forms.Button();
+            this.cbLaptopType = new System.Windows.Forms.ComboBox();
+            this.rtbInfo = new System.Windows.Forms.RichTextBox();
+            this.lblWelcome = new System.Windows.Forms.Label();
+            this.lblSelect = new System.Windows.Forms.Label();
+            this.SuspendLayout();
+            // 
+            // btnOrder
+            // 
+            this.btnOrder.Location = new System.Drawing.Point(375, 119);
+            this.btnOrder.Name = "btnOrder";
+            this.btnOrder.Size = new System.Drawing.Size(110, 53);
+            this.btnOrder.TabIndex = 0;
+            this.btnOrder.Text = "Order";
+            this.btnOrder.UseVisualStyleBackColor = true;
+            this.btnOrder.Click += new System.EventHandler(this.btnOrder_Click);
+            // 
+            // cbLaptopType
+            // 
+            this.cbLaptopType.FormattingEnabled = true;
+            this.cbLaptopType.Location = new System.Drawing.Point(47, 134);
+            this.cbLaptopType.Name = "cbLaptopType";
+            this.cbLaptopType.Size = new System.Drawing.Size(158, 24);
+            this.cbLaptopType.TabIndex = 2;
+            // 
+            // rtbInfo
+            // 
+            this.rtbInfo.Location = new System.Drawing.Point(47, 216);
+            this.rtbInfo.Name = "rtbInfo";
+            this.rtbInfo.Size = new System.Drawing.Size(438, 370);
+            this.rtbInfo.TabIndex = 3;
+            this.rtbInfo.Text = "";
+            // 
+            // lblWelcome
+            // 
+            this.lblWelcome.AutoSize = true;
+            this.lblWelcome.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblWelcome.Location = new System.Drawing.Point(47, 29);
+            this.lblWelcome.Name = "lblWelcome";
+            this.lblWelcome.Size = new System.Drawing.Size(432, 25);
+            this.lblWelcome.TabIndex = 4;
+            this.lblWelcome.Text = "Welcome to our shop, we offer 3 types of laptops";
+            // 
+            // lblSelect
+            // 
+            this.lblSelect.AutoSize = true;
+            this.lblSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSelect.Location = new System.Drawing.Point(47, 67);
+            this.lblSelect.Name = "lblSelect";
+            this.lblSelect.Size = new System.Drawing.Size(297, 25);
+            this.lblSelect.TabIndex = 4;
+            this.lblSelect.Text = "You can select a type from below";
+            // 
+            // LaptopOrdering
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(534, 657);
+            this.Controls.Add(this.lblSelect);
+            this.Controls.Add(this.lblWelcome);
+            this.Controls.Add(this.rtbInfo);
+            this.Controls.Add(this.cbLaptopType);
+            this.Controls.Add(this.btnOrder);
+            this.Name = "LaptopOrdering";
+            this.Text = "LaptopOrdering";
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Button btnOrder;
+        private System.Windows.Forms.ComboBox cbLaptopType;
+        private System.Windows.Forms.RichTextBox rtbInfo;
+        private System.Windows.Forms.Label lblWelcome;
+        private System.Windows.Forms.Label lblSelect;
+    }
+}
+
+namespace LaptopProduction
+{
+    public enum LaptopType
+    {
+        Economical, HighEnd, Gaming
+    }
+
+    public class LaptopStore
+    {
+        public Laptop Laptop { get; private set; }
+
+        public LaptopStore()
+        {
+            Laptop = null;
+        }
+
+        public void OrderLaptop(LaptopType type)
+        {
+            switch (type)
+            {
+                case LaptopType.Economical:
+                    Laptop = new EconomicalLaptop(new EconomicalFactory());
+                    break;
+                case LaptopType.HighEnd:
+                    Laptop = new HighEndLaptop(new HighEndFactory());
+                    break;
+                case LaptopType.Gaming:
+                    Laptop = new GamingLaptop(new GamingFactory());
+                    break;
+            }
+            Laptop.BuildLaptop();
+            Laptop.Assemble();
+            Laptop.Packaging();
+        }
+    }
+}
+using LaptopProduction.concreteParts;
+using LaptopProduction.parts;
+
+namespace LaptopProduction
+{
+    public class LenovoFactory : IFactory
+    {
+        public IHighEndLaptop ProduceHighEndLaptop()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEconomicalLaptop ProductEconomicalLaptop()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+}
+using LaptopProduction.parts;
+
+namespace LaptopProduction.parts
+{
+    public class AmdIntegrated : IPart
+    {
+        public string Name { get; set; }
+
+        public AmdIntegrated()
+        {
+            Name = "Integrated graphics with AMD APU";
+        }
+    }
+}
+namespace LaptopProduction.parts
+{
+    public class AmdQuad : IPart
+    {
+        public string Name { get; set; }
+
+        public AmdQuad()
+        {
+            Name = "AMD A8-7410 Quad-Core APU";
+        }
+    }
+}
+namespace LaptopProduction.parts
+{
+    public class CpuIntel6Quad : IPart
+    {
+        public string Name { get; set; }
+
+        public CpuIntel6Quad()
+        {
+            Name = "6th Generation Intel Core i5-6300HQ Quad Core";
+        }
+    }
+}
+namespace LaptopProduction.parts
+{
+    public class CpuIntel7Quad : IPart
+    {
+        public string Name { get; set; }
+
+        public CpuIntel7Quad()
+        {
+            Name = "7th Generation Intel® Core™ i7-7700HQ (Quad-Core, 6MB Cache, up to 3.8GHz w/ Turbo Boost)";
+        }
+    }
+}
+namespace LaptopProduction.parts
+{
+    public class Geforce4G : IPart
+    {
+        public string Name { get; set; }
+
+        public Geforce4G()
+        {
+            Name = "NVIDIA GeForce GTX 1050Ti with 4GB GDDR5";
+        }
+    }
+}
+namespace LaptopProduction.parts
+{
+    public class Geforce6G : IPart
+    {
+        public string Name { get; set; }
+
+        public Geforce6G()
+        {
+            Name = "NVIDIA® GeForce® GTX 1060 with 6GB GDDR5";
+        }
+    }
+}
+namespace LaptopProduction.parts
+{
+    public class HardDrive1T : IPart
+    {
+        public string Name { get; set; }
+
+        public HardDrive1T()
+        {
+            Name = "1TB 7200RPM SATA 6Gb/s";
+        }
+    }
+}
+namespace LaptopProduction.parts
+{
+    public class HardDriveHybrid : IPart
+    {
+        public string Name { get; set; }
+
+        public HardDriveHybrid()
+        {
+            Name = "1TB 5.4k Hybrid HDD + 8G Cache [1TB 5400 rpm Hybrid Hard Drive + 8GB Embedded Flash Cache]";
+        }
+    }
+}
+namespace LaptopProduction.parts
+{
+    public interface IPart
+    {
+        string Name { get; set; }
+    }
+}
+namespace LaptopProduction.parts
+{
+    public class Ram16G : IPart
+    {
+        public string Name { get; set; }
+
+        public Ram16G()
+        {
+            Name = "16GB DDR4-2400MHz";
+        }
+    }
+}
+namespace LaptopProduction.parts
+{
+    public class Ram4G : IPart
+    {
+        public string Name { get; set; }
+
+        public Ram4G()
+        {
+            Name = "8GB Single channel DDR3L";
+        }
+    }
+}
+namespace LaptopProduction.parts
+{
+    public class Ram8G : IPart
+    {
+        public string Name { get; set; }
+
+        public Ram8G()
+        {
+            Name = "8GB Single channel DDR3L";
+        }
+    }
+}
+namespace LaptopProduction.parts
+{
+    public class Ssd256G : IPart
+    {
+        public string Name { get; set; }
+
+        public Ssd256G()
+        {
+            Name = "256GB Solid State Drive";
+        }
+    }
+}
+using LaptopProduction.parts;
+
+namespace LaptopProduction
+{
+    public abstract class Producer
+    {
+        public string Name { get; set; }
+        public string ProgressMsg { get; set; }
+        public ICpu Cpu { get; set; }
+        public IMemory Memory { get; set; }
+        public IGraphics Graphics { get; set; }
+        public IDiscreteGraphics DescreteGraphics { get; set; }
+        public IStorage Storage { get; set; }
+        public ISsd Ssd { get; set; }
+        public IFactory LaptopFactory { get; }
+
+        protected Producer(IFactory laptopFactory)
+        {
+            LaptopFactory = laptopFactory;
+        }
+
+        public void PrepareCommonParts()
+        {
+            Cpu = LaptopFactory.CreateCpu();
+            ProgressMsg += "CPU: " + Cpu.Name + "\n\n";
+            Memory = LaptopFactory.CreateMemory();
+            ProgressMsg += "Memory: " + Memory.Name + "\n\n";
+            Graphics = LaptopFactory.CreateHdGraphics();
+            ProgressMsg += "Video Card: " + Graphics.Name + "\n\n";
+        }
+
+        public abstract void PrepareSpecificParts();
+
+        public void Assemble()
+        {
+            ProgressMsg += "Assembling your " + Name + "\n\n";
+        }
+
+        public void Packaging()
+        {
+            ProgressMsg += "Packaging your " + Name + "\n\n";
+        }
+
+        public override string ToString()
+        {
+            ProgressMsg += "Product completed!";
+            return ProgressMsg;
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace LaptopProduction
+{
+    static class Program
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new LaptopOrdering());
+        }
+    }
+}
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("LaptopProduction")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("LaptopProduction")]
+[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+// Setting ComVisible to false makes the types in this assembly not visible 
+// to COM components.  If you need to access a type in this assembly from 
+// COM, set the ComVisible attribute to true on that type.
+[assembly: ComVisible(false)]
+
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("7ed94a6d-d5c6-4237-93a4-0982de702503")]
+
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Build and Revision Numbers 
+// by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+namespace LaptopProduction.Properties
+{
+
+
+    /// <summary>
+    ///   A strongly-typed resource class, for looking up localized strings, etc.
+    /// </summary>
+    // This class was auto-generated by the StronglyTypedResourceBuilder
+    // class via a tool like ResGen or Visual Studio.
+    // To add or remove a member, edit your .ResX file then rerun ResGen
+    // with the /str option, or rebuild your VS project.
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    internal class Resources
+    {
+
+        private static global::System.Resources.ResourceManager resourceMan;
+
+        private static global::System.Globalization.CultureInfo resourceCulture;
+
+        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        internal Resources()
+        {
+        }
+
+        /// <summary>
+        ///   Returns the cached ResourceManager instance used by this class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Resources.ResourceManager ResourceManager
+        {
+            get
+            {
+                if ((resourceMan == null))
+                {
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LaptopProduction.Properties.Resources", typeof(Resources).Assembly);
+                    resourceMan = temp;
+                }
+                return resourceMan;
+            }
+        }
+
+        /// <summary>
+        ///   Overrides the current thread's CurrentUICulture property for all
+        ///   resource lookups using this strongly typed resource class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Globalization.CultureInfo Culture
+        {
+            get
+            {
+                return resourceCulture;
+            }
+            set
+            {
+                resourceCulture = value;
+            }
+        }
+    }
+}
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+namespace LaptopProduction.Properties
+{
+
+
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
+    {
+
+        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+
+        public static Settings Default
+        {
+            get
+            {
+                return defaultInstance;
+            }
+        }
+    }
+}
+using LaptopProduction;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace LaptopProductionTests
+{
+    [TestClass]
+    public class LaptopStoreTest
+    {
+        private LaptopStore _store;
+
+        [TestInitialize]
+        public void TestSetup()
+        {
+            _store = new LaptopStore();
+        }
+
+        [TestMethod]
+        public void Laptop_SelectEconomicalType_OutputNameMatch()
+        {
+            _store.OrderLaptop(LaptopType.Economical);
+            string storage = "1TB 7200RPM SATA 6Gb/s";
+            Assert.AreEqual(storage, _store.Laptop.Storage.Name);
+            string name = "Economical Laptop";
+            Assert.AreEqual(name, _store.Laptop.Name);
+        }
+
+        [TestMethod]
+        public void Laptop_SelectHighEndType_OutputNameMatch()
+        {
+            _store.OrderLaptop(LaptopType.HighEnd);
+            string graphics = "NVIDIA GeForce GTX 1050Ti with 4GB GDDR5";
+            Assert.AreEqual(graphics, _store.Laptop.Graphics.Name);
+            string name = "High-end Home Laptop";
+            Assert.AreEqual(name, _store.Laptop.Name);
+        }
+
+        [TestMethod]
+        public void Laptop_SelectGamingType_OutputNameMatch()
+        {
+            _store.OrderLaptop(LaptopType.Gaming);
+            string cpu = "7th Generation Intel® Core™ i7-7700HQ (Quad-Core, 6MB Cache, up to 3.8GHz w/ Turbo Boost)";
+            Assert.AreEqual(cpu, _store.Laptop.Cpu.Name);
+            string name = "Gaming Laptop";
+            Assert.AreEqual(name, _store.Laptop.Name);
+        }
+
+        [TestCleanup]
+        public void TestTearDown()
+        {
+            _store = null;
+        }
+    }
+}
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("LaptopProductionTests")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("LaptopProductionTests")]
+[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+// Setting ComVisible to false makes the types in this assembly not visible 
+// to COM components.  If you need to access a type in this assembly from 
+// COM, set the ComVisible attribute to true on that type.
+[assembly: ComVisible(false)]
+
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("8e360c05-3bfc-4cff-8ffe-5a3b4517a146")]
+
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Build and Revision Numbers 
+// by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

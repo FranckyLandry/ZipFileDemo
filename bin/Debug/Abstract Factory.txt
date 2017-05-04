@@ -1,0 +1,1086 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Minion_SmurfGame
+{
+    public interface AbstractFactory
+    {
+        IHouse CreateHouse();
+        ICharacter CreateCharacter();
+        IFood CreateFood();
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Minion_SmurfGame
+{
+    public partial class Form1 : Form
+    {
+        AbstractFactory MinionFactory, SmurfFactory;
+        ICharacter MinionCharacter, SmurfCharacter;
+        IHouse MinionHouse, SmurfHouse;
+        IFood MinionFood, SmurfFood;
+
+        public Form1()
+        {
+            InitializeComponent();
+
+            MinionFactory = new MinionFactory();
+            MinionCharacter = MinionFactory.CreateCharacter();
+            MinionFood = MinionFactory.CreateFood();
+            MinionHouse = MinionFactory.CreateHouse();
+
+            SmurfFactory = new SmurfFactory();
+            SmurfCharacter = SmurfFactory.CreateCharacter();
+            SmurfFood = SmurfFactory.CreateFood();
+            SmurfHouse = SmurfFactory.CreateHouse();
+        }   
+
+        private void btnGoShoppingM_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                lbDescriptionM.Text = MinionFood.GoShopping(Convert.ToInt32(tbAmountM.Text));
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("You have to write the amount of money!");
+            }
+        }
+
+        private void btnCookM_Click(object sender, EventArgs e)
+        {
+            lbDescriptionM.Text = MinionFood.Cook();
+        }
+
+        private void btnBuildM_Click(object sender, EventArgs e)
+        {
+            pbM.Image = Image.FromFile("../Resources/minionhouse.jpg");
+            lbDescriptionM.Text = MinionHouse.Build();
+        }
+
+
+        private void btnDecorateM_Click(object sender, EventArgs e)
+        {
+            lbDescriptionM.Text = MinionHouse.Decorate();
+        }
+
+        private void btnCleanM_Click(object sender, EventArgs e)
+        {
+            lbDescriptionM.Text = MinionHouse.Clean();
+            pbM.Image = null;
+        }
+
+        private void btnChangeClothesM_Click(object sender, EventArgs e)
+        {
+            Color outfitColor = new Color();
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                outfitColor = colorDialog1.Color;
+            }
+            lbDescriptionM.Text = MinionCharacter.ChangeClothes(outfitColor);
+        }
+
+        private void btnTakeShowerM_Click(object sender, EventArgs e)
+        {
+            if (rbHotM.Checked == true)
+            {
+                lbDescriptionM.Text = MinionCharacter.TakeShower(rbHotM.Text);
+            }
+            else if (rbColdM.Checked == true)
+            {
+                lbDescriptionM.Text = MinionCharacter.TakeShower(rbColdM.Text);
+            }
+            else
+            {
+                MessageBox.Show("You have to select the water type first!");
+            }
+        }
+
+        private void btnGoShoppingS_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                lbDescriptionS.Text = SmurfFood.GoShopping(Convert.ToInt32(tbAmountS.Text));
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("You have to write the amount of money!");
+            }
+}
+
+        private void btnCookS_Click(object sender, EventArgs e)
+        {
+            lbDescriptionS.Text = SmurfFood.Cook();
+        }
+
+        private void btnBuildS_Click(object sender, EventArgs e)
+        {
+            pbS.Image = Image.FromFile("../Resources/smurfhouse.jpg");
+            lbDescriptionS.Text = SmurfHouse.Build();
+        }
+
+        private void btnDecorateS_Click(object sender, EventArgs e)
+        {
+            lbDescriptionS.Text = SmurfHouse.Decorate();
+        }
+
+        private void btnCleanS_Click(object sender, EventArgs e)
+        {
+            lbDescriptionS.Text = SmurfHouse.Clean();
+        }
+
+        private void btnChangeClothesS_Click(object sender, EventArgs e)
+        {
+            Color outfitColor = new Color();
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                outfitColor = colorDialog1.Color;
+            }
+            lbDescriptionS.Text = SmurfCharacter.ChangeClothes(outfitColor);
+        }
+
+        private void btnTakeShowerS_Click(object sender, EventArgs e)
+        {
+            if (rbHotS.Checked == true)
+            {
+                lbDescriptionS.Text = SmurfCharacter.TakeShower(rbHotS.Text);
+            }
+            else if (rbColdS.Checked == true)
+            {
+                lbDescriptionS.Text = SmurfCharacter.TakeShower(rbColdS.Text);
+            }
+            else
+            {
+                MessageBox.Show("You have to select the water type first!");
+            }
+        }               
+    }
+}
+namespace Minion_SmurfGame
+{
+    partial class Form1
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.tabControl = new System.Windows.Forms.TabControl();
+            this.tabMinion = new System.Windows.Forms.TabPage();
+            this.lbDescriptionM = new System.Windows.Forms.Label();
+            this.rbColdM = new System.Windows.Forms.RadioButton();
+            this.rbHotM = new System.Windows.Forms.RadioButton();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.pbM = new System.Windows.Forms.PictureBox();
+            this.tbAmountM = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnCookM = new System.Windows.Forms.Button();
+            this.btnTakeShowerM = new System.Windows.Forms.Button();
+            this.btnGoShoppingM = new System.Windows.Forms.Button();
+            this.btnChangeClothesM = new System.Windows.Forms.Button();
+            this.btnCleanM = new System.Windows.Forms.Button();
+            this.btnDecorateM = new System.Windows.Forms.Button();
+            this.btnBuildM = new System.Windows.Forms.Button();
+            this.tabSmurf = new System.Windows.Forms.TabPage();
+            this.lbDescriptionS = new System.Windows.Forms.Label();
+            this.rbColdS = new System.Windows.Forms.RadioButton();
+            this.rbHotS = new System.Windows.Forms.RadioButton();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.pbS = new System.Windows.Forms.PictureBox();
+            this.tbAmountS = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.btnCookS = new System.Windows.Forms.Button();
+            this.btnTakeShowerS = new System.Windows.Forms.Button();
+            this.btnGoShoppingS = new System.Windows.Forms.Button();
+            this.btnChangeClothesS = new System.Windows.Forms.Button();
+            this.btnCleanS = new System.Windows.Forms.Button();
+            this.btnDecorateS = new System.Windows.Forms.Button();
+            this.btnBuildS = new System.Windows.Forms.Button();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.tabControl.SuspendLayout();
+            this.tabMinion.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbM)).BeginInit();
+            this.tabSmurf.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbS)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // tabControl
+            // 
+            this.tabControl.Controls.Add(this.tabMinion);
+            this.tabControl.Controls.Add(this.tabSmurf);
+            this.tabControl.Location = new System.Drawing.Point(12, 28);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(807, 461);
+            this.tabControl.TabIndex = 0;
+            // 
+            // tabMinion
+            // 
+            this.tabMinion.Controls.Add(this.lbDescriptionM);
+            this.tabMinion.Controls.Add(this.rbColdM);
+            this.tabMinion.Controls.Add(this.rbHotM);
+            this.tabMinion.Controls.Add(this.label4);
+            this.tabMinion.Controls.Add(this.label3);
+            this.tabMinion.Controls.Add(this.pbM);
+            this.tabMinion.Controls.Add(this.tbAmountM);
+            this.tabMinion.Controls.Add(this.label1);
+            this.tabMinion.Controls.Add(this.btnCookM);
+            this.tabMinion.Controls.Add(this.btnTakeShowerM);
+            this.tabMinion.Controls.Add(this.btnGoShoppingM);
+            this.tabMinion.Controls.Add(this.btnChangeClothesM);
+            this.tabMinion.Controls.Add(this.btnCleanM);
+            this.tabMinion.Controls.Add(this.btnDecorateM);
+            this.tabMinion.Controls.Add(this.btnBuildM);
+            this.tabMinion.Location = new System.Drawing.Point(4, 25);
+            this.tabMinion.Name = "tabMinion";
+            this.tabMinion.Padding = new System.Windows.Forms.Padding(3);
+            this.tabMinion.Size = new System.Drawing.Size(799, 432);
+            this.tabMinion.TabIndex = 0;
+            this.tabMinion.Text = "Minion";
+            this.tabMinion.UseVisualStyleBackColor = true;
+            // 
+            // lbDescriptionM
+            // 
+            this.lbDescriptionM.AutoSize = true;
+            this.lbDescriptionM.Location = new System.Drawing.Point(37, 360);
+            this.lbDescriptionM.Name = "lbDescriptionM";
+            this.lbDescriptionM.Size = new System.Drawing.Size(83, 17);
+            this.lbDescriptionM.TabIndex = 14;
+            this.lbDescriptionM.Text = "Description:";
+            // 
+            // rbColdM
+            // 
+            this.rbColdM.AutoSize = true;
+            this.rbColdM.Location = new System.Drawing.Point(258, 176);
+            this.rbColdM.Name = "rbColdM";
+            this.rbColdM.Size = new System.Drawing.Size(57, 21);
+            this.rbColdM.TabIndex = 13;
+            this.rbColdM.TabStop = true;
+            this.rbColdM.Text = "Cold";
+            this.rbColdM.UseVisualStyleBackColor = true;
+            // 
+            // rbHotM
+            // 
+            this.rbHotM.AutoSize = true;
+            this.rbHotM.Location = new System.Drawing.Point(201, 176);
+            this.rbHotM.Name = "rbHotM";
+            this.rbHotM.Size = new System.Drawing.Size(51, 21);
+            this.rbHotM.TabIndex = 12;
+            this.rbHotM.TabStop = true;
+            this.rbHotM.Text = "Hot";
+            this.rbHotM.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(37, 228);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(130, 17);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "Food management:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(37, 101);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(65, 17);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "Daily life:";
+            // 
+            // pbM
+            // 
+            this.pbM.Location = new System.Drawing.Point(449, 57);
+            this.pbM.Name = "pbM";
+            this.pbM.Size = new System.Drawing.Size(296, 287);
+            this.pbM.TabIndex = 9;
+            this.pbM.TabStop = false;
+            // 
+            // tbAmountM
+            // 
+            this.tbAmountM.Location = new System.Drawing.Point(190, 270);
+            this.tbAmountM.Name = "tbAmountM";
+            this.tbAmountM.Size = new System.Drawing.Size(144, 22);
+            this.tbAmountM.TabIndex = 8;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(37, 21);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 17);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "House:";
+            // 
+            // btnCookM
+            // 
+            this.btnCookM.Location = new System.Drawing.Point(40, 312);
+            this.btnCookM.Name = "btnCookM";
+            this.btnCookM.Size = new System.Drawing.Size(123, 23);
+            this.btnCookM.TabIndex = 6;
+            this.btnCookM.Text = "Cook";
+            this.btnCookM.UseVisualStyleBackColor = true;
+            this.btnCookM.Click += new System.EventHandler(this.btnCookM_Click);
+            // 
+            // btnTakeShowerM
+            // 
+            this.btnTakeShowerM.Location = new System.Drawing.Point(40, 175);
+            this.btnTakeShowerM.Name = "btnTakeShowerM";
+            this.btnTakeShowerM.Size = new System.Drawing.Size(123, 23);
+            this.btnTakeShowerM.TabIndex = 5;
+            this.btnTakeShowerM.Text = "Take shower";
+            this.btnTakeShowerM.UseVisualStyleBackColor = true;
+            this.btnTakeShowerM.Click += new System.EventHandler(this.btnTakeShowerM_Click);
+            // 
+            // btnGoShoppingM
+            // 
+            this.btnGoShoppingM.Location = new System.Drawing.Point(40, 269);
+            this.btnGoShoppingM.Name = "btnGoShoppingM";
+            this.btnGoShoppingM.Size = new System.Drawing.Size(123, 23);
+            this.btnGoShoppingM.TabIndex = 4;
+            this.btnGoShoppingM.Text = "Go shopping";
+            this.btnGoShoppingM.UseVisualStyleBackColor = true;
+            this.btnGoShoppingM.Click += new System.EventHandler(this.btnGoShoppingM_Click);
+            // 
+            // btnChangeClothesM
+            // 
+            this.btnChangeClothesM.Location = new System.Drawing.Point(40, 134);
+            this.btnChangeClothesM.Name = "btnChangeClothesM";
+            this.btnChangeClothesM.Size = new System.Drawing.Size(123, 23);
+            this.btnChangeClothesM.TabIndex = 3;
+            this.btnChangeClothesM.Text = "Change clothes";
+            this.btnChangeClothesM.UseVisualStyleBackColor = true;
+            this.btnChangeClothesM.Click += new System.EventHandler(this.btnChangeClothesM_Click);
+            // 
+            // btnCleanM
+            // 
+            this.btnCleanM.Location = new System.Drawing.Point(246, 57);
+            this.btnCleanM.Name = "btnCleanM";
+            this.btnCleanM.Size = new System.Drawing.Size(88, 23);
+            this.btnCleanM.TabIndex = 2;
+            this.btnCleanM.Text = "Clean";
+            this.btnCleanM.UseVisualStyleBackColor = true;
+            this.btnCleanM.Click += new System.EventHandler(this.btnCleanM_Click);
+            // 
+            // btnDecorateM
+            // 
+            this.btnDecorateM.Location = new System.Drawing.Point(143, 57);
+            this.btnDecorateM.Name = "btnDecorateM";
+            this.btnDecorateM.Size = new System.Drawing.Size(88, 23);
+            this.btnDecorateM.TabIndex = 1;
+            this.btnDecorateM.Text = "Decorate";
+            this.btnDecorateM.UseVisualStyleBackColor = true;
+            this.btnDecorateM.Click += new System.EventHandler(this.btnDecorateM_Click);
+            // 
+            // btnBuildM
+            // 
+            this.btnBuildM.Location = new System.Drawing.Point(40, 57);
+            this.btnBuildM.Name = "btnBuildM";
+            this.btnBuildM.Size = new System.Drawing.Size(88, 23);
+            this.btnBuildM.TabIndex = 0;
+            this.btnBuildM.Text = "Build";
+            this.btnBuildM.UseVisualStyleBackColor = true;
+            this.btnBuildM.Click += new System.EventHandler(this.btnBuildM_Click);
+            // 
+            // tabSmurf
+            // 
+            this.tabSmurf.Controls.Add(this.lbDescriptionS);
+            this.tabSmurf.Controls.Add(this.rbColdS);
+            this.tabSmurf.Controls.Add(this.rbHotS);
+            this.tabSmurf.Controls.Add(this.label5);
+            this.tabSmurf.Controls.Add(this.label6);
+            this.tabSmurf.Controls.Add(this.pbS);
+            this.tabSmurf.Controls.Add(this.tbAmountS);
+            this.tabSmurf.Controls.Add(this.label7);
+            this.tabSmurf.Controls.Add(this.btnCookS);
+            this.tabSmurf.Controls.Add(this.btnTakeShowerS);
+            this.tabSmurf.Controls.Add(this.btnGoShoppingS);
+            this.tabSmurf.Controls.Add(this.btnChangeClothesS);
+            this.tabSmurf.Controls.Add(this.btnCleanS);
+            this.tabSmurf.Controls.Add(this.btnDecorateS);
+            this.tabSmurf.Controls.Add(this.btnBuildS);
+            this.tabSmurf.Location = new System.Drawing.Point(4, 25);
+            this.tabSmurf.Name = "tabSmurf";
+            this.tabSmurf.Padding = new System.Windows.Forms.Padding(3);
+            this.tabSmurf.Size = new System.Drawing.Size(799, 432);
+            this.tabSmurf.TabIndex = 1;
+            this.tabSmurf.Text = "Smurf";
+            this.tabSmurf.UseVisualStyleBackColor = true;
+            // 
+            // lbDescriptionS
+            // 
+            this.lbDescriptionS.AutoSize = true;
+            this.lbDescriptionS.Location = new System.Drawing.Point(36, 361);
+            this.lbDescriptionS.Name = "lbDescriptionS";
+            this.lbDescriptionS.Size = new System.Drawing.Size(83, 17);
+            this.lbDescriptionS.TabIndex = 29;
+            this.lbDescriptionS.Text = "Description:";
+            // 
+            // rbColdS
+            // 
+            this.rbColdS.AutoSize = true;
+            this.rbColdS.Location = new System.Drawing.Point(250, 177);
+            this.rbColdS.Name = "rbColdS";
+            this.rbColdS.Size = new System.Drawing.Size(57, 21);
+            this.rbColdS.TabIndex = 28;
+            this.rbColdS.TabStop = true;
+            this.rbColdS.Text = "Cold";
+            this.rbColdS.UseVisualStyleBackColor = true;
+            // 
+            // rbHotS
+            // 
+            this.rbHotS.AutoSize = true;
+            this.rbHotS.Location = new System.Drawing.Point(189, 177);
+            this.rbHotS.Name = "rbHotS";
+            this.rbHotS.Size = new System.Drawing.Size(51, 21);
+            this.rbHotS.TabIndex = 27;
+            this.rbHotS.TabStop = true;
+            this.rbHotS.Text = "Hot";
+            this.rbHotS.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(36, 229);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(130, 17);
+            this.label5.TabIndex = 26;
+            this.label5.Text = "Food management:";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(36, 102);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(65, 17);
+            this.label6.TabIndex = 25;
+            this.label6.Text = "Daily life:";
+            // 
+            // pbS
+            // 
+            this.pbS.Location = new System.Drawing.Point(451, 58);
+            this.pbS.Name = "pbS";
+            this.pbS.Size = new System.Drawing.Size(296, 287);
+            this.pbS.TabIndex = 24;
+            this.pbS.TabStop = false;
+            // 
+            // tbAmountS
+            // 
+            this.tbAmountS.Location = new System.Drawing.Point(189, 271);
+            this.tbAmountS.Name = "tbAmountS";
+            this.tbAmountS.Size = new System.Drawing.Size(134, 22);
+            this.tbAmountS.TabIndex = 23;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(36, 22);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(53, 17);
+            this.label7.TabIndex = 22;
+            this.label7.Text = "House:";
+            // 
+            // btnCookS
+            // 
+            this.btnCookS.Location = new System.Drawing.Point(39, 313);
+            this.btnCookS.Name = "btnCookS";
+            this.btnCookS.Size = new System.Drawing.Size(123, 23);
+            this.btnCookS.TabIndex = 21;
+            this.btnCookS.Text = "Cook";
+            this.btnCookS.UseVisualStyleBackColor = true;
+            this.btnCookS.Click += new System.EventHandler(this.btnCookS_Click);
+            // 
+            // btnTakeShowerS
+            // 
+            this.btnTakeShowerS.Location = new System.Drawing.Point(39, 176);
+            this.btnTakeShowerS.Name = "btnTakeShowerS";
+            this.btnTakeShowerS.Size = new System.Drawing.Size(123, 23);
+            this.btnTakeShowerS.TabIndex = 20;
+            this.btnTakeShowerS.Text = "Take shower";
+            this.btnTakeShowerS.UseVisualStyleBackColor = true;
+            this.btnTakeShowerS.Click += new System.EventHandler(this.btnTakeShowerS_Click);
+            // 
+            // btnGoShoppingS
+            // 
+            this.btnGoShoppingS.Location = new System.Drawing.Point(39, 270);
+            this.btnGoShoppingS.Name = "btnGoShoppingS";
+            this.btnGoShoppingS.Size = new System.Drawing.Size(123, 23);
+            this.btnGoShoppingS.TabIndex = 19;
+            this.btnGoShoppingS.Text = "Go shopping";
+            this.btnGoShoppingS.UseVisualStyleBackColor = true;
+            this.btnGoShoppingS.Click += new System.EventHandler(this.btnGoShoppingS_Click);
+            // 
+            // btnChangeClothesS
+            // 
+            this.btnChangeClothesS.Location = new System.Drawing.Point(39, 135);
+            this.btnChangeClothesS.Name = "btnChangeClothesS";
+            this.btnChangeClothesS.Size = new System.Drawing.Size(123, 23);
+            this.btnChangeClothesS.TabIndex = 18;
+            this.btnChangeClothesS.Text = "Change clothes";
+            this.btnChangeClothesS.UseVisualStyleBackColor = true;
+            this.btnChangeClothesS.Click += new System.EventHandler(this.btnChangeClothesS_Click);
+            // 
+            // btnCleanS
+            // 
+            this.btnCleanS.Location = new System.Drawing.Point(238, 58);
+            this.btnCleanS.Name = "btnCleanS";
+            this.btnCleanS.Size = new System.Drawing.Size(85, 23);
+            this.btnCleanS.TabIndex = 17;
+            this.btnCleanS.Text = "Clean";
+            this.btnCleanS.UseVisualStyleBackColor = true;
+            this.btnCleanS.Click += new System.EventHandler(this.btnCleanS_Click);
+            // 
+            // btnDecorateS
+            // 
+            this.btnDecorateS.Location = new System.Drawing.Point(138, 58);
+            this.btnDecorateS.Name = "btnDecorateS";
+            this.btnDecorateS.Size = new System.Drawing.Size(85, 23);
+            this.btnDecorateS.TabIndex = 16;
+            this.btnDecorateS.Text = "Decorate";
+            this.btnDecorateS.UseVisualStyleBackColor = true;
+            this.btnDecorateS.Click += new System.EventHandler(this.btnDecorateS_Click);
+            // 
+            // btnBuildS
+            // 
+            this.btnBuildS.Location = new System.Drawing.Point(39, 58);
+            this.btnBuildS.Name = "btnBuildS";
+            this.btnBuildS.Size = new System.Drawing.Size(85, 23);
+            this.btnBuildS.TabIndex = 15;
+            this.btnBuildS.Text = "Build";
+            this.btnBuildS.UseVisualStyleBackColor = true;
+            this.btnBuildS.Click += new System.EventHandler(this.btnBuildS_Click);
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(829, 500);
+            this.Controls.Add(this.tabControl);
+            this.Name = "Form1";
+            this.Text = "Form1";
+            this.tabControl.ResumeLayout(false);
+            this.tabMinion.ResumeLayout(false);
+            this.tabMinion.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbM)).EndInit();
+            this.tabSmurf.ResumeLayout(false);
+            this.tabSmurf.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbS)).EndInit();
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TabPage tabMinion;
+        private System.Windows.Forms.TabPage tabSmurf;
+        private System.Windows.Forms.Button btnCookM;
+        private System.Windows.Forms.Button btnTakeShowerM;
+        private System.Windows.Forms.Button btnGoShoppingM;
+        private System.Windows.Forms.Button btnChangeClothesM;
+        private System.Windows.Forms.Button btnCleanM;
+        private System.Windows.Forms.Button btnDecorateM;
+        private System.Windows.Forms.Button btnBuildM;
+        private System.Windows.Forms.PictureBox pbM;
+        private System.Windows.Forms.TextBox tbAmountM;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.RadioButton rbColdM;
+        private System.Windows.Forms.RadioButton rbHotM;
+        private System.Windows.Forms.Label lbDescriptionM;
+        private System.Windows.Forms.Label lbDescriptionS;
+        private System.Windows.Forms.RadioButton rbColdS;
+        private System.Windows.Forms.RadioButton rbHotS;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.PictureBox pbS;
+        private System.Windows.Forms.TextBox tbAmountS;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button btnCookS;
+        private System.Windows.Forms.Button btnTakeShowerS;
+        private System.Windows.Forms.Button btnGoShoppingS;
+        private System.Windows.Forms.Button btnChangeClothesS;
+        private System.Windows.Forms.Button btnCleanS;
+        private System.Windows.Forms.Button btnDecorateS;
+        private System.Windows.Forms.Button btnBuildS;
+        private System.Windows.Forms.ColorDialog colorDialog1;
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Drawing;
+
+namespace Minion_SmurfGame
+{
+    public interface ICharacter
+    {
+        string TakeShower(string temperatureType);
+        string ChangeClothes(Color outfitColor);
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Minion_SmurfGame
+{
+    public interface IFood
+    {
+        string GoShopping(int amountOfMoney);
+        string Cook();
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Minion_SmurfGame
+{
+    public interface IHouse
+    {
+        string Build();
+        string Decorate();
+        string Clean();
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Drawing;
+
+namespace Minion_SmurfGame
+{
+    public class MinionCharacter : ICharacter
+    {
+        public string ChangeClothes(Color outfitColor)
+        {
+            return "OOTD: lovely " + outfitColor.Name.ToLower();
+        }
+
+        public string TakeShower(string temperatureType)
+        {
+            if (temperatureType == "Hot")
+            {
+                return "Holy shittttt this is way too hot for a minion! But I will get used to it...";
+            }
+            else
+            {
+                return "Cold... As if I was in North Pole few years ago";
+            }
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Minion_SmurfGame
+{
+    public class MinionFactory : AbstractFactory
+    {
+        public ICharacter CreateCharacter()
+        {
+            return (new MinionCharacter());
+        }
+
+        public IHouse CreateHouse()
+        {
+            return (new MinionHouse());
+        }
+
+        public IFood CreateFood()
+        {
+            return (new MinionFood());
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Minion_SmurfGame
+{
+    public class MinionFood : IFood
+    {
+        public string GoShopping(int amountOfMoney)
+        {            
+            if (amountOfMoney > 0 && amountOfMoney < 100)
+            {
+                return "This won't get us a delicious meal... Wayyyy to many mouths";
+            }
+            else if (amountOfMoney > 100)
+            {
+                return "Happy minions! Let's party!";
+            }
+            else if (amountOfMoney == 0)
+            {
+                return "I cannot buy anything with this!";
+            }
+            else
+            {
+                throw new Exception("negative values or wrong value type");
+            }
+        }
+
+        public string Cook()
+        {
+            return "Minion really sucks at it but I will try, let me do it master";
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Drawing;
+
+namespace Minion_SmurfGame
+{
+    public class MinionHouse : IHouse
+    {
+        public string Build()
+        {
+            return "Build one, not destroy one!";
+        }
+
+        public string Decorate()
+        {
+            return "Minions are skillful artisan, this is my job!";
+        }
+
+        public string Clean()
+        {
+            return "Oh shit, where is the house? Did I explode it? Shouldn't it be incombustible???? Master will kill me!!!";
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Minion_SmurfGame
+{
+    static class Program
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
+        }
+    }
+}
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("Minion_SmurfGame")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Minion_SmurfGame")]
+[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+// Setting ComVisible to false makes the types in this assembly not visible 
+// to COM components.  If you need to access a type in this assembly from 
+// COM, set the ComVisible attribute to true on that type.
+[assembly: ComVisible(false)]
+
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("6cff5966-77c5-4723-8248-0e12eafa1a0e")]
+
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Build and Revision Numbers 
+// by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+namespace Minion_SmurfGame.Properties
+{
+
+
+    /// <summary>
+    ///   A strongly-typed resource class, for looking up localized strings, etc.
+    /// </summary>
+    // This class was auto-generated by the StronglyTypedResourceBuilder
+    // class via a tool like ResGen or Visual Studio.
+    // To add or remove a member, edit your .ResX file then rerun ResGen
+    // with the /str option, or rebuild your VS project.
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    internal class Resources
+    {
+
+        private static global::System.Resources.ResourceManager resourceMan;
+
+        private static global::System.Globalization.CultureInfo resourceCulture;
+
+        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        internal Resources()
+        {
+        }
+
+        /// <summary>
+        ///   Returns the cached ResourceManager instance used by this class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Resources.ResourceManager ResourceManager
+        {
+            get
+            {
+                if ((resourceMan == null))
+                {
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Minion_SmurfGame.Properties.Resources", typeof(Resources).Assembly);
+                    resourceMan = temp;
+                }
+                return resourceMan;
+            }
+        }
+
+        /// <summary>
+        ///   Overrides the current thread's CurrentUICulture property for all
+        ///   resource lookups using this strongly typed resource class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Globalization.CultureInfo Culture
+        {
+            get
+            {
+                return resourceCulture;
+            }
+            set
+            {
+                resourceCulture = value;
+            }
+        }
+    }
+}
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+namespace Minion_SmurfGame.Properties
+{
+
+
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
+    {
+
+        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+
+        public static Settings Default
+        {
+            get
+            {
+                return defaultInstance;
+            }
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Drawing;
+
+namespace Minion_SmurfGame
+{
+    public class SmurfCharacter : ICharacter
+    {
+        public string ChangeClothes(Color outfitColor)
+        {
+            return "OOTD: " + outfitColor.Name.ToLower() + " = cuteness overload";
+        }
+
+        public string TakeShower(string temperatureType)
+        {
+            if (temperatureType == "Hot")
+            {
+                return "Smurfy hot water...";
+            }
+            else
+            {
+                return "It's okay someone will melt me later...";
+            }
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Minion_SmurfGame
+{
+    public class SmurfFactory : AbstractFactory
+    {
+        public ICharacter CreateCharacter()
+        {
+            return (new SmurfCharacter());
+        }
+
+        public IHouse CreateHouse()
+        {
+            return (new SmurfHouse());
+        }
+
+        public IFood CreateFood()
+        {
+            return (new SmurfFood());
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Minion_SmurfGame
+{
+    public class SmurfFood : IFood
+    {
+        public string GoShopping(int amountOfMoney)
+        {
+            if (amountOfMoney > 0 && amountOfMoney < 10)
+            {
+                return "Day by day, still yummy...";
+            }
+            else if (amountOfMoney > 10)
+            {
+                return "Are you kidding me? This amount can buy us a new smurf village!";
+            }
+            else if (amountOfMoney == 0)
+            {
+                return "I cannot buy anything with this!";
+            }
+            else
+            {
+                throw new Exception("negative values or wrong value type");
+            }
+        }
+
+        public string Cook()
+        {
+            return "No matter what the gender is, smurf is always seen as a masterchef!";
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Minion_SmurfGame
+{
+    public class SmurfHouse : IHouse
+    {
+        public string Build()
+        {
+            return "Build it as small as possible!!!!";
+        }
+
+        public string Decorate()
+        {
+            return "Small but lovely, that's a smurfy house";
+        }
+
+        public string Clean()
+        {
+            return "It is tiny, so it takes time!";
+        }
+    }
+}

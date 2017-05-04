@@ -1,0 +1,812 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public interface AutomobileFactory
+    {
+        CompactCar AssembleCompactCar();
+        Limousine AssembleLimousine();
+        SUV AssembleSUV();
+        Hybrid AssembleHybrid();
+    }
+}using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public enum Brands
+    {
+        Opel,
+        Toyota
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public class CarDealer
+    {
+        public List<CompactCar> compactCars;
+        public List<Limousine> limousines;
+        public List<SUV> SUVs;
+        public List<Hybrid> hybrids;
+        private AutomobileFactory factory;
+        private Brands brand;
+
+        public CarDealer(AutomobileFactory factory, Brands brand)
+        {
+            this.factory = factory;
+            this.brand = brand;
+            compactCars = new List<CompactCar>();
+            limousines = new List<Limousine>();
+            SUVs = new List<SUV>();
+            hybrids = new List<Hybrid>();
+        }
+
+        public void MakeCar(Cars type)
+        {
+            switch (type)
+            {
+                case Cars.CompactCar:
+                    CompactCar cc = factory.AssembleCompactCar();
+                    compactCars.Add(cc);
+                    break;
+                case Cars.Limousine:
+                    Limousine l = factory.AssembleLimousine();
+                    limousines.Add(l);
+                    break;
+                case Cars.SUV:
+                    SUV suv = factory.AssembleSUV();
+                    SUVs.Add(suv);
+                    break;
+                case Cars.Hybrid:
+                    Hybrid h = factory.AssembleHybrid();
+                    hybrids.Add(h);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public override string ToString()
+        {
+            return brand.ToString() + " dealer";
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public enum Cars
+    {
+        CompactCar,
+        Limousine,
+        SUV,
+        Hybrid
+    }
+}
+namespace AbstractFactoryCarDealer
+{
+    public abstract class CompactCar
+    {
+        protected string brand;
+
+        public CompactCar(string brand)
+        {
+            this.brand = brand;
+        }
+
+        public override string ToString()
+        {
+            return brand + " " + Cars.CompactCar.ToString();
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace AbstractFactoryCarDealer
+{
+    public partial class Form1 : Form
+    {
+        private List<CarDealer> carDealers;
+        public Form1()
+        {
+            InitializeComponent();
+            carDealers = new List<CarDealer>();
+            carDealers.Add(new CarDealer(new ToyotaFactory(), Brands.Toyota));
+            carDealers.Add(new CarDealer(new OpelFactory(), Brands.Opel));
+            comboBoxDealers.DataSource = null;
+            comboBoxDealers.DataSource = carDealers;
+            this.comboBoxCars.DataSource = Enum.GetValues(typeof(Cars));
+        }
+
+        //private void buttonAddDealer_Click(object sender, EventArgs e)
+        //{
+        //    AutomobileFactory factory = null;
+        //    switch ((Brands)comboBoxCarBrand.SelectedValue)
+        //    {
+        //        case Brands.Opel:
+        //            factory = new OpelFactory(); // use singleton?? if factory exists we dont need new one
+        //            break;
+        //        case Brands.Toyota:
+        //            factory = new ToyotaFactory(); // use singleton??
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //    carDealers.Add(new CarDealer(factory, (Brands)comboBoxCarBrand.SelectedValue));
+        //    UpdateListDealers();
+        //}
+
+        private void buttonAddCar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                CarDealer cd = (CarDealer)comboBoxDealers.SelectedItem;
+                cd.MakeCar((Cars)comboBoxCars.SelectedValue);
+                //comboBoxDealers.Select();
+                UpdateListCars((CarDealer)comboBoxDealers.SelectedValue);
+            }
+            catch (NullReferenceException)
+            {
+                MessageBox.Show("You need to select dealer from list of dealers.");
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Something went wrong. Exception: " + ex.Message);
+            }
+        }
+
+        //private void listBoxDealers_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    UpdateListCars((CarDealer)listBoxDealers.SelectedValue);
+        //}
+
+        //private void UpdateListDealers()
+        //{
+        //    //listBoxDealers.DataSource = null;
+        //    //listBoxDealers.DataSource = carDealers; 
+        //    comboBoxDealers.DataSource = null;
+        //    comboBoxDealers.DataSource = carDealers;
+        //}
+        private void UpdateListCars(CarDealer cd)
+        {
+            listBoxCompactCars.DataSource = null;
+            listBoxCompactCars.DataSource = cd.compactCars;
+            listBoxLimousine.DataSource = null;
+            listBoxLimousine.DataSource = cd.limousines;
+            listBoxSUV.DataSource = null;
+            listBoxSUV.DataSource = cd.SUVs;
+            listBoxHybrid.DataSource = null;
+            listBoxHybrid.DataSource = cd.hybrids;
+        }
+
+        private void comboBoxDealers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateListCars((CarDealer)comboBoxDealers.SelectedValue);
+        }
+    }
+}
+namespace AbstractFactoryCarDealer
+{
+    partial class Form1
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.listBoxCompactCars = new System.Windows.Forms.ListBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.buttonAddCar = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.comboBoxCars = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.listBoxLimousine = new System.Windows.Forms.ListBox();
+            this.labelSUV = new System.Windows.Forms.Label();
+            this.listBoxSUV = new System.Windows.Forms.ListBox();
+            this.labelHybrid = new System.Windows.Forms.Label();
+            this.listBoxHybrid = new System.Windows.Forms.ListBox();
+            this.comboBoxDealers = new System.Windows.Forms.ComboBox();
+            this.SuspendLayout();
+            // 
+            // listBoxCompactCars
+            // 
+            this.listBoxCompactCars.FormattingEnabled = true;
+            this.listBoxCompactCars.Location = new System.Drawing.Point(459, 25);
+            this.listBoxCompactCars.Name = "listBoxCompactCars";
+            this.listBoxCompactCars.Size = new System.Drawing.Size(120, 355);
+            this.listBoxCompactCars.TabIndex = 4;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(291, 9);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(69, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Select dealer";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(456, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(72, 13);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Compact cars";
+            // 
+            // buttonAddCar
+            // 
+            this.buttonAddCar.Location = new System.Drawing.Point(22, 29);
+            this.buttonAddCar.Name = "buttonAddCar";
+            this.buttonAddCar.Size = new System.Drawing.Size(75, 23);
+            this.buttonAddCar.TabIndex = 7;
+            this.buttonAddCar.Text = "Add car";
+            this.buttonAddCar.UseVisualStyleBackColor = true;
+            this.buttonAddCar.Click += new System.EventHandler(this.buttonAddCar_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(116, 15);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(96, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Choose type of car";
+            // 
+            // comboBoxCars
+            // 
+            this.comboBoxCars.FormattingEnabled = true;
+            this.comboBoxCars.Location = new System.Drawing.Point(119, 31);
+            this.comboBoxCars.Name = "comboBoxCars";
+            this.comboBoxCars.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxCars.TabIndex = 8;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(611, 9);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(54, 13);
+            this.label5.TabIndex = 11;
+            this.label5.Text = "Limousine";
+            // 
+            // listBoxLimousine
+            // 
+            this.listBoxLimousine.FormattingEnabled = true;
+            this.listBoxLimousine.Location = new System.Drawing.Point(614, 25);
+            this.listBoxLimousine.Name = "listBoxLimousine";
+            this.listBoxLimousine.Size = new System.Drawing.Size(120, 355);
+            this.listBoxLimousine.TabIndex = 10;
+            // 
+            // labelSUV
+            // 
+            this.labelSUV.AutoSize = true;
+            this.labelSUV.Location = new System.Drawing.Point(753, 9);
+            this.labelSUV.Name = "labelSUV";
+            this.labelSUV.Size = new System.Drawing.Size(29, 13);
+            this.labelSUV.TabIndex = 13;
+            this.labelSUV.Text = "SUV";
+            // 
+            // listBoxSUV
+            // 
+            this.listBoxSUV.FormattingEnabled = true;
+            this.listBoxSUV.Location = new System.Drawing.Point(756, 25);
+            this.listBoxSUV.Name = "listBoxSUV";
+            this.listBoxSUV.Size = new System.Drawing.Size(120, 355);
+            this.listBoxSUV.TabIndex = 12;
+            // 
+            // labelHybrid
+            // 
+            this.labelHybrid.AutoSize = true;
+            this.labelHybrid.Location = new System.Drawing.Point(898, 9);
+            this.labelHybrid.Name = "labelHybrid";
+            this.labelHybrid.Size = new System.Drawing.Size(37, 13);
+            this.labelHybrid.TabIndex = 15;
+            this.labelHybrid.Text = "Hybrid";
+            // 
+            // listBoxHybrid
+            // 
+            this.listBoxHybrid.FormattingEnabled = true;
+            this.listBoxHybrid.Location = new System.Drawing.Point(901, 25);
+            this.listBoxHybrid.Name = "listBoxHybrid";
+            this.listBoxHybrid.Size = new System.Drawing.Size(120, 355);
+            this.listBoxHybrid.TabIndex = 14;
+            // 
+            // comboBoxDealers
+            // 
+            this.comboBoxDealers.FormattingEnabled = true;
+            this.comboBoxDealers.Location = new System.Drawing.Point(294, 27);
+            this.comboBoxDealers.Name = "comboBoxDealers";
+            this.comboBoxDealers.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxDealers.TabIndex = 16;
+            this.comboBoxDealers.SelectedIndexChanged += new System.EventHandler(this.comboBoxDealers_SelectedIndexChanged);
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1045, 389);
+            this.Controls.Add(this.comboBoxDealers);
+            this.Controls.Add(this.labelHybrid);
+            this.Controls.Add(this.listBoxHybrid);
+            this.Controls.Add(this.labelSUV);
+            this.Controls.Add(this.listBoxSUV);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.listBoxLimousine);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.comboBoxCars);
+            this.Controls.Add(this.buttonAddCar);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.listBoxCompactCars);
+            this.Name = "Form1";
+            this.Text = "AbstractFactory";
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+        private System.Windows.Forms.ListBox listBoxCompactCars;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button buttonAddCar;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox comboBoxCars;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ListBox listBoxLimousine;
+        private System.Windows.Forms.Label labelSUV;
+        private System.Windows.Forms.ListBox listBoxSUV;
+        private System.Windows.Forms.Label labelHybrid;
+        private System.Windows.Forms.ListBox listBoxHybrid;
+        private System.Windows.Forms.ComboBox comboBoxDealers;
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public abstract class Hybrid
+    {
+        protected string brand;
+
+        public Hybrid(string brand)
+        {
+            this.brand = brand;
+        }
+        public override string ToString()
+        {
+            return brand + " " + Cars.Hybrid.ToString();
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public abstract class Limousine
+    {
+        protected string brand;
+
+        public Limousine(string brand)
+        {
+            this.brand = brand;
+        }
+
+        public override string ToString()
+        {
+            return brand + " " + Cars.Limousine.ToString();
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public class OpelCompactCar : CompactCar
+    {
+        public OpelCompactCar(): base(Brands.Opel.ToString())
+        {
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public class OpelFactory : AutomobileFactory
+    {
+        public CompactCar AssembleCompactCar()
+        {
+            return new OpelCompactCar();
+        }
+
+        public Hybrid AssembleHybrid()
+        {
+            return new OpelHybrid();
+        }
+
+        public Limousine AssembleLimousine()
+        {
+            return new OpelLimousine();
+        }
+
+        public SUV AssembleSUV()
+        {
+            return new OpelSUV();
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public class OpelHybrid : Hybrid
+    {
+        public OpelHybrid():base(Brands.Opel.ToString())
+        {
+
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public class OpelLimousine : Limousine
+    {
+        public OpelLimousine():base(Brands.Opel.ToString())
+        {
+
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public class OpelSUV : SUV
+    {
+        public OpelSUV():base(Brands.Opel.ToString())
+        {
+
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace AbstractFactoryCarDealer
+{
+    static class Program
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
+        }
+    }
+}
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+// General Information about an assembly is controlled through the following
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("AbstractFactoryCarDealer")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("AbstractFactoryCarDealer")]
+[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+// Setting ComVisible to false makes the types in this assembly not visible
+// to COM components.  If you need to access a type in this assembly from
+// COM, set the ComVisible attribute to true on that type.
+[assembly: ComVisible(false)]
+
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("86fecf6c-9dee-4956-a65e-575ece861a95")]
+
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Build and Revision Numbers
+// by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+namespace AbstractFactoryCarDealer.Properties
+{
+
+
+    /// <summary>
+    ///   A strongly-typed resource class, for looking up localized strings, etc.
+    /// </summary>
+    // This class was auto-generated by the StronglyTypedResourceBuilder
+    // class via a tool like ResGen or Visual Studio.
+    // To add or remove a member, edit your .ResX file then rerun ResGen
+    // with the /str option, or rebuild your VS project.
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    internal class Resources
+    {
+
+        private static global::System.Resources.ResourceManager resourceMan;
+
+        private static global::System.Globalization.CultureInfo resourceCulture;
+
+        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        internal Resources()
+        {
+        }
+
+        /// <summary>
+        ///   Returns the cached ResourceManager instance used by this class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Resources.ResourceManager ResourceManager
+        {
+            get
+            {
+                if ((resourceMan == null))
+                {
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AbstractFactoryCarDealer.Properties.Resources", typeof(Resources).Assembly);
+                    resourceMan = temp;
+                }
+                return resourceMan;
+            }
+        }
+
+        /// <summary>
+        ///   Overrides the current thread's CurrentUICulture property for all
+        ///   resource lookups using this strongly typed resource class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Globalization.CultureInfo Culture
+        {
+            get
+            {
+                return resourceCulture;
+            }
+            set
+            {
+                resourceCulture = value;
+            }
+        }
+    }
+}
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+namespace AbstractFactoryCarDealer.Properties
+{
+
+
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
+    {
+
+        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+
+        public static Settings Default
+        {
+            get
+            {
+                return defaultInstance;
+            }
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public abstract class SUV
+    {
+        protected string brand;
+
+        public SUV(string brand)
+        {
+            this.brand = brand;
+        }
+        public override string ToString()
+        {
+            return brand + " " + Cars.SUV.ToString();
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public class ToyotaCompactCar : CompactCar
+    {
+        public ToyotaCompactCar():base(Brands.Toyota.ToString())
+        {
+
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public class ToyotaFactory : AutomobileFactory
+    {
+        public CompactCar AssembleCompactCar()
+        {
+            return new ToyotaCompactCar();
+        }
+
+        public Hybrid AssembleHybrid()
+        {
+            return new ToyotaHybrid();
+        }
+
+        public Limousine AssembleLimousine()
+        {
+            return new ToyotaLimousine();
+        }
+
+        public SUV AssembleSUV()
+        {
+            return new ToyotaSUV();
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public class ToyotaHybrid : Hybrid
+    {
+        public ToyotaHybrid():base(Brands.Toyota.ToString())
+        {
+
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public class ToyotaLimousine : Limousine
+    {
+        public ToyotaLimousine():base(Brands.Toyota.ToString())
+        {
+
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public class ToyotaSUV : SUV
+    {
+        public ToyotaSUV():base(Brands.Toyota.ToString())
+        {
+
+        }
+    }
+}

@@ -1,0 +1,1019 @@
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("UnitTestProject1")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("UnitTestProject1")]
+[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+// Setting ComVisible to false makes the types in this assembly not visible 
+// to COM components.  If you need to access a type in this assembly from 
+// COM, set the ComVisible attribute to true on that type.
+[assembly: ComVisible(false)]
+
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("0d1b7f0d-a633-44d0-8c32-6c67b190e18a")]
+
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Build and Revision Numbers 
+// by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
+using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Week4FactoryPattern;
+
+namespace UnitTestProject1
+{
+    [TestClass]
+    public class UnitTest1
+    {
+        [TestMethod]
+        public void TestCreateFigure()
+        {
+            //checks if the created figure and factory match
+            GenericGame game = new GenericGame();
+
+            //test if factory creates a new minion
+            MinionFactory minionFac = new MinionFactory();
+            game.setFactory(minionFac);
+            IFigure figMin = game.createFig("test minion");
+            Assert.AreEqual(figMin.GetType(), typeof(Minion));
+
+            //test if factory creates a new smurf
+            SmurfFactory smurfFac = new SmurfFactory();
+            game.setFactory(smurfFac);
+            IFigure figSmur = game.createFig("test smurf");
+            Assert.AreEqual(figSmur.GetType(), typeof(Smurf));
+        }
+
+        [TestMethod]
+        public void TestCreateHouse()
+        {
+            //checks if the factory creates correct house
+            GenericGame game = new GenericGame();
+
+            //test if factory creates a new minionhouse
+            MinionFactory minionFac = new MinionFactory();
+            game.setFactory(minionFac);
+            IHouse houseMin = game.createHouse();
+            Assert.AreEqual(houseMin.GetType(), typeof(MinionHouse));
+
+            //test if factory creates a new smurfhouse
+            SmurfFactory smurfFac = new SmurfFactory();
+            game.setFactory(smurfFac);
+            IHouse houseSmur = game.createHouse();
+            Assert.AreEqual(houseSmur.GetType(), typeof(SmurfHouse));
+        }
+
+        [TestMethod]
+        public void TestCheckFigureName()
+        {
+            //checks if the created figures have assigned name
+            GenericGame game = new GenericGame();
+            MinionFactory minionFac = new MinionFactory();
+            game.setFactory(minionFac);
+
+            IFigure figMin1 = game.createFig("test1");
+            Assert.AreEqual(((Minion)figMin1).Name, "test1");
+
+            IFigure figMin2 = game.createFig("test2");
+            Assert.AreEqual(((Minion)figMin2).Name, "test2");
+        }
+
+        [TestMethod]
+        public void TestRepairHouse()
+        {
+            //checks if repairing house works - tested with minionhouse
+            GenericGame game = new GenericGame();
+
+            //test if factory creates a new minionhouse
+            MinionFactory minionFac = new MinionFactory();
+            game.setFactory(minionFac);
+
+            //create a new house and get the house number of it
+            IHouse houseMin = game.createHouse();
+            int housenr = houseMin.GetHouseNr();
+            string result;
+
+            //initially boolean for broken is true, so house should be fixable
+            result = game.FixHouse(houseMin);
+            Assert.AreEqual(result, "Minion house " + housenr + " is now fixed");
+
+            //now house is already fixed, so with the next try it should not fix it anymore
+            result = game.FixHouse(houseMin);
+            Assert.AreEqual(result, "Minion house " + housenr + " is already fixed!");
+        }
+
+        [TestMethod]
+        public void TestMeasureHouse()
+        {
+            //checks if measuring house works - tested with minionhouse
+            GenericGame game = new GenericGame();
+
+            //test if factory creates a new minionhouse
+            MinionFactory minionFac = new MinionFactory();
+            game.setFactory(minionFac);
+
+            //create a new house and get the house number of it
+            IHouse houseMin = game.createHouse();
+            int housenr = houseMin.GetHouseNr();
+
+            //size for minionhouse is 100+housenr
+            game.GetHouseSize(houseMin);
+            Assert.AreEqual(housenr+100, houseMin.GetSize());
+        }
+
+        [TestMethod]
+        public void TestFigureActions()
+        {
+            //checks if the created figures sing and dance properly
+            GenericGame game = new GenericGame();
+
+            MinionFactory minionFac = new MinionFactory();
+            game.setFactory(minionFac);
+            IFigure figMin = game.createFig("testMin");
+            Assert.AreEqual("testMin is singing for minions", game.sing(figMin));
+            Assert.AreEqual("testMin is dancing minion dance, huuulaaa!!!", game.dance(figMin));
+
+
+            SmurfFactory smurfFac = new SmurfFactory();
+            game.setFactory(smurfFac);
+            IFigure figSmurf = game.createFig("testSmurf");
+            Assert.AreEqual("testSmurf is singing a smurfsong", game.sing(figSmurf));
+            Assert.AreEqual("testSmurf is dancing smurf dance!", game.dance(figSmurf));
+
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace Week4FactoryPattern
+{
+    public partial class Form1 : Form
+    {
+
+        GenericGame thegame;
+        IFactory minionFactory;
+        IFactory smurfFactory;
+
+        public Form1()
+        {
+            InitializeComponent();
+            minionFactory = new MinionFactory();
+            smurfFactory = new SmurfFactory();
+        }
+
+
+        private void btSing_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                lb_events.Items.Add(thegame.sing((IFigure)lb_figures.SelectedItem));
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Select a figure first");
+            }
+        }
+
+        private void btDance_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                lb_events.Items.Add(thegame.dance((IFigure)lb_figures.SelectedItem));
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Select a figure first");
+            }
+        }
+
+
+        private void rbMinionGame_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                thegame.setFactory(minionFactory);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("First create the game");
+            }
+        }
+
+        private void rbSmurfGame_CheckedChanged(object sender, EventArgs e)
+        {
+            try 
+            {
+            thegame.setFactory(smurfFactory);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("First create the game");
+            }
+        }
+
+        private void btCreateFigure_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                lb_figures.Items.Add(thegame.createFig(tbName.Text));
+                lb_events.Items.Add("New figure added!");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Select a game from radiobuttons");
+            }
+        }
+
+        private void btRepairHouse_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                lb_events.Items.Add(thegame.FixHouse((IHouse)lb_houses.SelectedItem));
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Select a house first");
+            }
+        }
+
+        private void btMeasureHouse_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                lb_events.Items.Add(thegame.GetHouseSize((IHouse)lb_houses.SelectedItem));
+            }
+            
+            catch (Exception)
+            {
+                MessageBox.Show("Select a house first");
+            }
+        }
+
+        private void btCreateHouse_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                lb_houses.Items.Add(thegame.createHouse());
+                lb_events.Items.Add("New house added!");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Select a game from radiobuttons");
+            }
+        }
+
+        private void btStartGame_Click(object sender, EventArgs e)
+        {
+            thegame = new GenericGame();
+            lb_events.Items.Add(thegame.run());
+        }
+
+
+
+    }
+}
+namespace Week4FactoryPattern
+{
+    partial class Form1
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.label1 = new System.Windows.Forms.Label();
+            this.lb_events = new System.Windows.Forms.ListBox();
+            this.btStartGame = new System.Windows.Forms.Button();
+            this.tbName = new System.Windows.Forms.TextBox();
+            this.btSing = new System.Windows.Forms.Button();
+            this.btDance = new System.Windows.Forms.Button();
+            this.lb_figures = new System.Windows.Forms.ListBox();
+            this.btCreateFigure = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.btCreateHouse = new System.Windows.Forms.Button();
+            this.btMeasureHouse = new System.Windows.Forms.Button();
+            this.btRepairHouse = new System.Windows.Forms.Button();
+            this.lb_houses = new System.Windows.Forms.ListBox();
+            this.rbSmurfGame = new System.Windows.Forms.RadioButton();
+            this.rbMinionGame = new System.Windows.Forms.RadioButton();
+            this.panel1.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Minion Pro", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(287, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(141, 33);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "WELCOME!";
+            // 
+            // lb_events
+            // 
+            this.lb_events.FormattingEnabled = true;
+            this.lb_events.ItemHeight = 16;
+            this.lb_events.Location = new System.Drawing.Point(24, 513);
+            this.lb_events.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.lb_events.Name = "lb_events";
+            this.lb_events.ScrollAlwaysVisible = true;
+            this.lb_events.Size = new System.Drawing.Size(661, 228);
+            this.lb_events.TabIndex = 2;
+            // 
+            // btStartGame
+            // 
+            this.btStartGame.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.btStartGame.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btStartGame.Location = new System.Drawing.Point(197, 44);
+            this.btStartGame.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btStartGame.Name = "btStartGame";
+            this.btStartGame.Size = new System.Drawing.Size(309, 42);
+            this.btStartGame.TabIndex = 3;
+            this.btStartGame.Text = "Start game";
+            this.btStartGame.UseVisualStyleBackColor = false;
+            this.btStartGame.Click += new System.EventHandler(this.btStartGame_Click);
+            // 
+            // tbName
+            // 
+            this.tbName.Location = new System.Drawing.Point(115, 3);
+            this.tbName.Margin = new System.Windows.Forms.Padding(0);
+            this.tbName.Name = "tbName";
+            this.tbName.Size = new System.Drawing.Size(214, 22);
+            this.tbName.TabIndex = 4;
+            this.tbName.Text = "name";
+            // 
+            // btSing
+            // 
+            this.btSing.Location = new System.Drawing.Point(115, 321);
+            this.btSing.Name = "btSing";
+            this.btSing.Size = new System.Drawing.Size(103, 34);
+            this.btSing.TabIndex = 5;
+            this.btSing.Text = "Sing";
+            this.btSing.UseVisualStyleBackColor = true;
+            this.btSing.Click += new System.EventHandler(this.btSing_Click);
+            // 
+            // btDance
+            // 
+            this.btDance.Location = new System.Drawing.Point(224, 321);
+            this.btDance.Name = "btDance";
+            this.btDance.Size = new System.Drawing.Size(105, 34);
+            this.btDance.TabIndex = 6;
+            this.btDance.Text = "Dance";
+            this.btDance.UseVisualStyleBackColor = true;
+            this.btDance.Click += new System.EventHandler(this.btDance_Click);
+            // 
+            // lb_figures
+            // 
+            this.lb_figures.FormattingEnabled = true;
+            this.lb_figures.ItemHeight = 16;
+            this.lb_figures.Location = new System.Drawing.Point(115, 70);
+            this.lb_figures.Name = "lb_figures";
+            this.lb_figures.Size = new System.Drawing.Size(214, 244);
+            this.lb_figures.TabIndex = 7;
+            // 
+            // btCreateFigure
+            // 
+            this.btCreateFigure.Location = new System.Drawing.Point(115, 25);
+            this.btCreateFigure.Margin = new System.Windows.Forms.Padding(0);
+            this.btCreateFigure.Name = "btCreateFigure";
+            this.btCreateFigure.Size = new System.Drawing.Size(214, 40);
+            this.btCreateFigure.TabIndex = 8;
+            this.btCreateFigure.Text = "Create Figure";
+            this.btCreateFigure.UseVisualStyleBackColor = true;
+            this.btCreateFigure.Click += new System.EventHandler(this.btCreateFigure_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.lb_figures);
+            this.panel1.Controls.Add(this.btCreateHouse);
+            this.panel1.Controls.Add(this.btMeasureHouse);
+            this.panel1.Controls.Add(this.btRepairHouse);
+            this.panel1.Controls.Add(this.lb_houses);
+            this.panel1.Controls.Add(this.btDance);
+            this.panel1.Controls.Add(this.btCreateFigure);
+            this.panel1.Controls.Add(this.btSing);
+            this.panel1.Controls.Add(this.tbName);
+            this.panel1.Location = new System.Drawing.Point(12, 132);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(673, 366);
+            this.panel1.TabIndex = 10;
+            // 
+            // btCreateHouse
+            // 
+            this.btCreateHouse.Location = new System.Drawing.Point(404, 25);
+            this.btCreateHouse.Name = "btCreateHouse";
+            this.btCreateHouse.Size = new System.Drawing.Size(232, 40);
+            this.btCreateHouse.TabIndex = 13;
+            this.btCreateHouse.Text = "Create house";
+            this.btCreateHouse.UseVisualStyleBackColor = true;
+            this.btCreateHouse.Click += new System.EventHandler(this.btCreateHouse_Click);
+            // 
+            // btMeasureHouse
+            // 
+            this.btMeasureHouse.Location = new System.Drawing.Point(516, 319);
+            this.btMeasureHouse.Name = "btMeasureHouse";
+            this.btMeasureHouse.Size = new System.Drawing.Size(120, 35);
+            this.btMeasureHouse.TabIndex = 12;
+            this.btMeasureHouse.Text = "Measure House";
+            this.btMeasureHouse.UseVisualStyleBackColor = true;
+            this.btMeasureHouse.Click += new System.EventHandler(this.btMeasureHouse_Click);
+            // 
+            // btRepairHouse
+            // 
+            this.btRepairHouse.Location = new System.Drawing.Point(404, 320);
+            this.btRepairHouse.Name = "btRepairHouse";
+            this.btRepairHouse.Size = new System.Drawing.Size(106, 34);
+            this.btRepairHouse.TabIndex = 0;
+            this.btRepairHouse.Text = "Repair  house";
+            this.btRepairHouse.UseVisualStyleBackColor = true;
+            this.btRepairHouse.Click += new System.EventHandler(this.btRepairHouse_Click);
+            // 
+            // lb_houses
+            // 
+            this.lb_houses.FormattingEnabled = true;
+            this.lb_houses.ItemHeight = 16;
+            this.lb_houses.Location = new System.Drawing.Point(404, 70);
+            this.lb_houses.Name = "lb_houses";
+            this.lb_houses.Size = new System.Drawing.Size(232, 244);
+            this.lb_houses.TabIndex = 11;
+            // 
+            // rbSmurfGame
+            // 
+            this.rbSmurfGame.AutoSize = true;
+            this.rbSmurfGame.Location = new System.Drawing.Point(252, 91);
+            this.rbSmurfGame.Name = "rbSmurfGame";
+            this.rbSmurfGame.Size = new System.Drawing.Size(108, 21);
+            this.rbSmurfGame.TabIndex = 10;
+            this.rbSmurfGame.TabStop = true;
+            this.rbSmurfGame.Text = "Smurf Game";
+            this.rbSmurfGame.UseVisualStyleBackColor = true;
+            this.rbSmurfGame.CheckedChanged += new System.EventHandler(this.rbSmurfGame_CheckedChanged);
+            // 
+            // rbMinionGame
+            // 
+            this.rbMinionGame.AutoSize = true;
+            this.rbMinionGame.Location = new System.Drawing.Point(366, 91);
+            this.rbMinionGame.Name = "rbMinionGame";
+            this.rbMinionGame.Size = new System.Drawing.Size(112, 21);
+            this.rbMinionGame.TabIndex = 9;
+            this.rbMinionGame.TabStop = true;
+            this.rbMinionGame.Text = "Minion Game";
+            this.rbMinionGame.UseVisualStyleBackColor = true;
+            this.rbMinionGame.CheckedChanged += new System.EventHandler(this.rbMinionGame_CheckedChanged);
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ClientSize = new System.Drawing.Size(713, 752);
+            this.Controls.Add(this.btStartGame);
+            this.Controls.Add(this.lb_events);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.rbMinionGame);
+            this.Controls.Add(this.rbSmurfGame);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Name = "Form1";
+            this.Text = "Form1";
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ListBox lb_events;
+        private System.Windows.Forms.Button btStartGame;
+        private System.Windows.Forms.TextBox tbName;
+        private System.Windows.Forms.Button btSing;
+        private System.Windows.Forms.Button btDance;
+        private System.Windows.Forms.ListBox lb_figures;
+        private System.Windows.Forms.Button btCreateFigure;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button btRepairHouse;
+        private System.Windows.Forms.RadioButton rbSmurfGame;
+        private System.Windows.Forms.RadioButton rbMinionGame;
+        private System.Windows.Forms.ListBox lb_houses;
+        private System.Windows.Forms.Button btMeasureHouse;
+        private System.Windows.Forms.Button btCreateHouse;
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Week4FactoryPattern
+{
+    public class GenericGame
+    {
+        IFactory factory;
+        
+
+        public String run()
+        {
+            return ("Game started");
+        }
+
+        public void setFactory(IFactory f)
+        {
+            factory = f;
+        }
+
+        public IFigure createFig(string name)
+        {
+            IFigure fig = factory.createFigure(name);
+            return fig;
+        }
+
+        public IHouse createHouse()
+        {
+            IHouse house =factory.createHouse();
+            return house;
+        }
+
+        public String sing(IFigure fig)
+        {
+            return fig.sing();
+        }
+
+        public String dance(IFigure fig)
+        {
+            return fig.dance();
+        }
+
+        public string FixHouse(IHouse house)
+        {
+            return house.repair();
+        }
+
+        public string GetHouseSize(IHouse house)
+        {
+            return house.measure();
+        }
+
+
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Week4FactoryPattern
+{
+    public interface IFactory
+    {
+        IFigure createFigure(string name);
+        IHouse createHouse();
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Week4FactoryPattern
+{
+    public interface IFigure
+    {
+        String dance();
+        String sing();
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Week4FactoryPattern
+{
+    public interface IHouse
+    {
+        string repair();
+        string measure();
+        int GetHouseNr();
+        int GetSize();
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Week4FactoryPattern
+{
+    public class Minion:IFigure
+    {
+        public string Name;
+
+        public Minion(string name)
+        {
+            Name = name;
+        }
+        public String dance()
+        {
+            return Name + " is dancing minion dance, huuulaaa!!!";
+        }
+        public String sing()
+        {
+            return Name + " is singing for minions";
+        }
+
+        public override string ToString()
+        {
+            return " Minion " + Name;
+        }
+       
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Week4FactoryPattern
+{
+   public class MinionFactory:IFactory
+    {
+        public IFigure createFigure(string name)
+        {
+            return (new Minion(name));
+        }
+        public IHouse createHouse()
+        {
+            return (new MinionHouse());
+        }
+
+        public override string ToString()
+        {
+            return "Minion game";
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Week4FactoryPattern
+{
+   public class MinionHouse:IHouse
+    {
+        private bool broken;
+        private int basesize=100;
+        private static int counter =1;
+        private int housenr;
+
+        public MinionHouse()
+        {
+            broken=true;
+            housenr=counter;
+            counter++;
+
+        }
+        public string repair()
+        {
+            if (broken)
+            {
+                broken = false;
+                return "Minion house " + housenr + " is now fixed";
+            }
+            else return "Minion house " + housenr + " is already fixed!";
+
+        }
+        public string measure()
+        {
+            return "Minion house " + housenr+" size is: " + GetSize();
+        }
+
+        public int GetSize()
+        {
+            return basesize + housenr;
+        }
+
+        public int GetHouseNr()
+        {
+            return housenr;
+        }
+
+        public override string ToString(){
+            return "Minion house nr:" + housenr;
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+
+namespace Week4FactoryPattern
+{
+    static class Program
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
+        }
+    }
+}
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("Week4FactoryPattern")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Week4FactoryPattern")]
+[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+// Setting ComVisible to false makes the types in this assembly not visible 
+// to COM components.  If you need to access a type in this assembly from 
+// COM, set the ComVisible attribute to true on that type.
+[assembly: ComVisible(false)]
+
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("bd698441-e842-4e59-986d-1bdcbdd618a4")]
+
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Build and Revision Numbers 
+// by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+namespace Week4FactoryPattern.Properties {
+    using System;
+    
+    
+    /// <summary>
+    ///   A strongly-typed resource class, for looking up localized strings, etc.
+    /// </summary>
+    // This class was auto-generated by the StronglyTypedResourceBuilder
+    // class via a tool like ResGen or Visual Studio.
+    // To add or remove a member, edit your .ResX file then rerun ResGen
+    // with the /str option, or rebuild your VS project.
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    internal class Resources {
+        
+        private static global::System.Resources.ResourceManager resourceMan;
+        
+        private static global::System.Globalization.CultureInfo resourceCulture;
+        
+        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        internal Resources() {
+        }
+        
+        /// <summary>
+        ///   Returns the cached ResourceManager instance used by this class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Week4FactoryPattern.Properties.Resources", typeof(Resources).Assembly);
+                    resourceMan = temp;
+                }
+                return resourceMan;
+            }
+        }
+        
+        /// <summary>
+        ///   Overrides the current thread's CurrentUICulture property for all
+        ///   resource lookups using this strongly typed resource class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Globalization.CultureInfo Culture {
+            get {
+                return resourceCulture;
+            }
+            set {
+                resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap _48bd3f6e928d7cb4b8d499cb0f96b8a8 {
+            get {
+                object obj = ResourceManager.GetObject("48bd3f6e928d7cb4b8d499cb0f96b8a8", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+    }
+}
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+namespace Week4FactoryPattern.Properties
+{
+
+
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
+    {
+
+        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+
+        public static Settings Default
+        {
+            get
+            {
+                return defaultInstance;
+            }
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Week4FactoryPattern
+{
+    public class Smurf : IFigure
+    {
+
+        public string Name;
+
+        public Smurf(string name)
+        {
+            Name = name;
+        }
+        public String dance()
+        {
+            return Name + " is dancing smurf dance!";
+        }
+        public String sing()
+        {
+            return Name + " is singing a smurfsong";
+        }
+        public override string ToString()
+        {
+            return " Smurf " + Name;
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Week4FactoryPattern
+{
+    public class SmurfFactory : IFactory
+    {
+        public IFigure createFigure(string name)
+        {
+            return (new Smurf(name));
+        }
+        public IHouse createHouse()
+        {
+            return (new SmurfHouse());
+        }
+
+        public override string ToString()
+        {
+            return "Smurf game";
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Week4FactoryPattern
+{
+   public class SmurfHouse : IHouse
+    {
+        private bool broken;
+        private int basesize=400;
+        private static int counter = 1;
+        private int housenr;
+
+        public SmurfHouse()
+        {
+            broken=true;
+            housenr = counter;
+            counter++;
+        }
+        public String repair()
+        {
+            if (broken)
+            {
+                broken = false;
+                return "Smurf house " + housenr + " is now fixed";
+            }
+            else return "Smurf house " + housenr + " is already fixed!";
+        }
+        public string measure()
+        {
+            return "Smurf house " + housenr + " size is: " + GetSize();
+        }
+
+        public int GetSize()
+        {
+            return basesize + housenr;
+        }
+
+        public int GetHouseNr()
+        {
+            return housenr;
+        }
+
+        public override string ToString()
+        {
+            return "Smurf house nr:" + housenr;
+        }
+    }
+}

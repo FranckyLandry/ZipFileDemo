@@ -1,0 +1,657 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DPR_Command_Pattern
+{
+    public partial class AccelerateCommand : Component
+    {
+        public AccelerateCommand()
+        {
+            InitializeComponent();
+        }
+
+        public AccelerateCommand(IContainer container)
+        {
+            container.Add(this);
+
+            InitializeComponent();
+        }
+    }
+}
+namespace DPR_Command_Pattern
+{
+    partial class AccelerateCommand
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Component Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            components = new System.ComponentModel.Container();
+        }
+
+        #endregion
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DPR_Command_Pattern
+{
+    class CommandAccelerate : ICommand
+    {
+        // ------------------------- Concrete Command #4 -------------------------
+        private Vehicle veh;
+
+        public CommandAccelerate(Vehicle theVehicle)
+        {
+            veh = theVehicle;
+        }
+
+        public string Execute()
+        {
+            return veh.Accelerate();
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DPR_Command_Pattern
+{
+    class CommandDecelerate : ICommand
+    {
+        // ------------------------- Concrete Command #3 -------------------------
+        public Vehicle veh;
+
+        public CommandDecelerate(Vehicle theVehicle)
+        {
+            veh = theVehicle;
+        }
+
+        public string Execute()
+        {
+            return veh.Decelerate();
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DPR_Command_Pattern
+{
+    class CommandSteerLeft : ICommand
+    {
+        // ------------------------- Concrete Command #2 -------------------------
+        private Vehicle veh;
+
+        public CommandSteerLeft(Vehicle theVehicle)
+        {
+            veh = theVehicle;
+        }
+
+        public string Execute()
+        {
+            return veh.SteerLeft();
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DPR_Command_Pattern
+{
+    class CommandSteerRight : ICommand
+    {
+        // ------------------------- Concrete Command #1 -------------------------
+        private Vehicle veh;
+
+        public CommandSteerRight(Vehicle theVehicle)
+        {
+            veh = theVehicle;
+        }
+
+        public string Execute()
+        {
+            return veh.SteerRight();
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DPR_Command_Pattern
+{
+    class Driver
+    {
+        // ------------------------- Invoker -------------------------
+        private List<ICommand> history = new List<ICommand>();
+
+        public List<ICommand> History { get { return history; } }
+
+        public string StoreAndExecute(ICommand cmd)
+        {
+            history.Add(cmd);
+            return cmd.Execute();
+        }   
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace DPR_Command_Pattern
+{
+    public partial class Form1 : Form
+    {
+        // ------------------------- Client -------------------------
+        private Vehicle vehicle;
+        private Driver driver;
+        private ICommand accelerate, decelerate, steerRight, steerLeft;
+
+        public Form1()
+        {
+            InitializeComponent();
+
+            vehicle = new Vehicle();
+
+            driver = new Driver();
+
+            accelerate = new CommandAccelerate(vehicle);
+            decelerate = new CommandDecelerate(vehicle);
+            steerRight = new CommandSteerRight(vehicle);
+            steerLeft = new CommandSteerLeft(vehicle);
+        }
+
+        // -------------------------- First tab --------------------------
+
+        #region First tab
+        private void btnSteerRight_Click(object sender, EventArgs e)
+        {
+            lbOutput.Items.Add(driver.StoreAndExecute(steerRight));
+        }
+
+        private void btnSteerLeft_Click(object sender, EventArgs e)
+        {
+            lbOutput.Items.Add(driver.StoreAndExecute(steerLeft));
+        }
+
+        private void btnDecelerate_Click(object sender, EventArgs e)
+        {
+            lbOutput.Items.Add(driver.StoreAndExecute(decelerate));
+        }
+
+        private void btnAccelerate_Click(object sender, EventArgs e)
+        {
+            lbOutput.Items.Add(driver.StoreAndExecute(accelerate));
+        }
+
+        private void btnClearListBox_Click(object sender, EventArgs e)
+        {
+            lbOutput.Items.Clear();
+        }
+        #endregion
+        // -------------------------- Second tab --------------------------
+        #region Second tab
+        private void btnHistory_Click(object sender, EventArgs e)
+        {
+            lbHistory.Items.Clear();
+
+            foreach (ICommand cmd in driver.History)
+                lbHistory.Items.Add(cmd.Execute());
+        }
+        #endregion
+    }
+}
+namespace DPR_Command_Pattern
+{
+    partial class Form1
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.lbOutput = new System.Windows.Forms.ListBox();
+            this.btnAccelerate = new System.Windows.Forms.Button();
+            this.btnDecelerate = new System.Windows.Forms.Button();
+            this.btnSteerRight = new System.Windows.Forms.Button();
+            this.btnSteerLeft = new System.Windows.Forms.Button();
+            this.btnClearListBox = new System.Windows.Forms.Button();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.lbHistory = new System.Windows.Forms.ListBox();
+            this.btnHistory = new System.Windows.Forms.Button();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // lbOutput
+            // 
+            this.lbOutput.FormattingEnabled = true;
+            this.lbOutput.Location = new System.Drawing.Point(4, 4);
+            this.lbOutput.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.lbOutput.Name = "lbOutput";
+            this.lbOutput.Size = new System.Drawing.Size(224, 173);
+            this.lbOutput.TabIndex = 0;
+            // 
+            // btnAccelerate
+            // 
+            this.btnAccelerate.Location = new System.Drawing.Point(232, 4);
+            this.btnAccelerate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnAccelerate.Name = "btnAccelerate";
+            this.btnAccelerate.Size = new System.Drawing.Size(88, 38);
+            this.btnAccelerate.TabIndex = 1;
+            this.btnAccelerate.Text = "Accelerate";
+            this.btnAccelerate.UseVisualStyleBackColor = true;
+            this.btnAccelerate.Click += new System.EventHandler(this.btnAccelerate_Click);
+            // 
+            // btnDecelerate
+            // 
+            this.btnDecelerate.Location = new System.Drawing.Point(232, 47);
+            this.btnDecelerate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnDecelerate.Name = "btnDecelerate";
+            this.btnDecelerate.Size = new System.Drawing.Size(88, 38);
+            this.btnDecelerate.TabIndex = 2;
+            this.btnDecelerate.Text = "Decelerate";
+            this.btnDecelerate.UseVisualStyleBackColor = true;
+            this.btnDecelerate.Click += new System.EventHandler(this.btnDecelerate_Click);
+            // 
+            // btnSteerRight
+            // 
+            this.btnSteerRight.Location = new System.Drawing.Point(232, 90);
+            this.btnSteerRight.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnSteerRight.Name = "btnSteerRight";
+            this.btnSteerRight.Size = new System.Drawing.Size(88, 38);
+            this.btnSteerRight.TabIndex = 3;
+            this.btnSteerRight.Text = "Steer Right";
+            this.btnSteerRight.UseVisualStyleBackColor = true;
+            this.btnSteerRight.Click += new System.EventHandler(this.btnSteerRight_Click);
+            // 
+            // btnSteerLeft
+            // 
+            this.btnSteerLeft.Location = new System.Drawing.Point(232, 133);
+            this.btnSteerLeft.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnSteerLeft.Name = "btnSteerLeft";
+            this.btnSteerLeft.Size = new System.Drawing.Size(88, 44);
+            this.btnSteerLeft.TabIndex = 4;
+            this.btnSteerLeft.Text = "Steer Left";
+            this.btnSteerLeft.UseVisualStyleBackColor = true;
+            this.btnSteerLeft.Click += new System.EventHandler(this.btnSteerLeft_Click);
+            // 
+            // btnClearListBox
+            // 
+            this.btnClearListBox.Location = new System.Drawing.Point(4, 182);
+            this.btnClearListBox.Name = "btnClearListBox";
+            this.btnClearListBox.Size = new System.Drawing.Size(75, 23);
+            this.btnClearListBox.TabIndex = 5;
+            this.btnClearListBox.Text = "Clear listbox";
+            this.btnClearListBox.UseVisualStyleBackColor = true;
+            this.btnClearListBox.Click += new System.EventHandler(this.btnClearListBox_Click);
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Location = new System.Drawing.Point(9, 10);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(357, 252);
+            this.tabControl1.TabIndex = 6;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.lbOutput);
+            this.tabPage1.Controls.Add(this.btnClearListBox);
+            this.tabPage1.Controls.Add(this.btnAccelerate);
+            this.tabPage1.Controls.Add(this.btnSteerLeft);
+            this.tabPage1.Controls.Add(this.btnDecelerate);
+            this.tabPage1.Controls.Add(this.btnSteerRight);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage1.Size = new System.Drawing.Size(349, 226);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Commands";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.btnHistory);
+            this.tabPage2.Controls.Add(this.lbHistory);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage2.Size = new System.Drawing.Size(349, 226);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "History";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // lbHistory
+            // 
+            this.lbHistory.FormattingEnabled = true;
+            this.lbHistory.Location = new System.Drawing.Point(5, 5);
+            this.lbHistory.Name = "lbHistory";
+            this.lbHistory.Size = new System.Drawing.Size(224, 173);
+            this.lbHistory.TabIndex = 0;
+            // 
+            // btnHistory
+            // 
+            this.btnHistory.Location = new System.Drawing.Point(5, 184);
+            this.btnHistory.Name = "btnHistory";
+            this.btnHistory.Size = new System.Drawing.Size(146, 23);
+            this.btnHistory.TabIndex = 1;
+            this.btnHistory.Text = "Show history of commands";
+            this.btnHistory.UseVisualStyleBackColor = true;
+            this.btnHistory.Click += new System.EventHandler(this.btnHistory_Click);
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(385, 269);
+            this.Controls.Add(this.tabControl1);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Name = "Form1";
+            this.Text = "Command Pattern";
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.ListBox lbOutput;
+        private System.Windows.Forms.Button btnAccelerate;
+        private System.Windows.Forms.Button btnDecelerate;
+        private System.Windows.Forms.Button btnSteerRight;
+        private System.Windows.Forms.Button btnSteerLeft;
+        private System.Windows.Forms.Button btnClearListBox;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Button btnHistory;
+        private System.Windows.Forms.ListBox lbHistory;
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DPR_Command_Pattern
+{
+    //The command interface
+    interface ICommand
+    {
+        string Execute();
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace DPR_Command_Pattern
+{
+    static class Program
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
+        }
+    }
+}
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("DPR-Command-Pattern")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("DPR-Command-Pattern")]
+[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+// Setting ComVisible to false makes the types in this assembly not visible 
+// to COM components.  If you need to access a type in this assembly from 
+// COM, set the ComVisible attribute to true on that type.
+[assembly: ComVisible(false)]
+
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("d691cbe5-33c1-4d98-90fb-e55c52547f5f")]
+
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Build and Revision Numbers 
+// by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+namespace DPR_Command_Pattern.Properties
+{
+
+
+    /// <summary>
+    ///   A strongly-typed resource class, for looking up localized strings, etc.
+    /// </summary>
+    // This class was auto-generated by the StronglyTypedResourceBuilder
+    // class via a tool like ResGen or Visual Studio.
+    // To add or remove a member, edit your .ResX file then rerun ResGen
+    // with the /str option, or rebuild your VS project.
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    internal class Resources
+    {
+
+        private static global::System.Resources.ResourceManager resourceMan;
+
+        private static global::System.Globalization.CultureInfo resourceCulture;
+
+        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        internal Resources()
+        {
+        }
+
+        /// <summary>
+        ///   Returns the cached ResourceManager instance used by this class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Resources.ResourceManager ResourceManager
+        {
+            get
+            {
+                if ((resourceMan == null))
+                {
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DPR_Command_Pattern.Properties.Resources", typeof(Resources).Assembly);
+                    resourceMan = temp;
+                }
+                return resourceMan;
+            }
+        }
+
+        /// <summary>
+        ///   Overrides the current thread's CurrentUICulture property for all
+        ///   resource lookups using this strongly typed resource class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Globalization.CultureInfo Culture
+        {
+            get
+            {
+                return resourceCulture;
+            }
+            set
+            {
+                resourceCulture = value;
+            }
+        }
+    }
+}
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+namespace DPR_Command_Pattern.Properties
+{
+
+
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
+    {
+
+        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+
+        public static Settings Default
+        {
+            get
+            {
+                return defaultInstance;
+            }
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DPR_Command_Pattern
+{
+    class Vehicle
+    {
+        // ------------------------- Receiver -------------------------
+        public string Accelerate()
+        {
+            return "The vehicle accelerated";
+        }
+
+        public string Decelerate()
+        {
+            return "The vehicle decelerated";
+        }
+
+        public string SteerRight()
+        {
+            return "The vehicle steered right";
+        }
+
+        public string SteerLeft()
+        {
+            return "The vehicle steered left";
+        }
+    }
+}
