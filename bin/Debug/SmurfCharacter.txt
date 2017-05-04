@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Drawing;
+
+namespace Minion_SmurfGame
+{
+    public class SmurfCharacter : ICharacter
+    {
+        public string ChangeClothes(Color outfitColor)
+        {
+            return "OOTD: " + outfitColor.Name.ToLower() + " = cuteness overload";
+        }
+
+        public string TakeShower(string temperatureType)
+        {
+            if (temperatureType == "Hot")
+            {
+                return "Smurfy hot water...";
+            }
+            else
+            {
+                return "It's okay someone will melt me later...";
+            }
+        }
+    }
+}

@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArmorTest
+{
+    public class DeadException : Exception
+    {
+        public DeadException(string message) : base(message)
+        {
+        }
+    }
+}

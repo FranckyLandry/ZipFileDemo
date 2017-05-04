@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArmorTest
+{
+    public abstract class Armor : IArmor
+    {
+        public abstract double Durability { get; set; }
+
+        public abstract void Repair();
+
+        public abstract void Tank(Projectile p);
+    }
+}

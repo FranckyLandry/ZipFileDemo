@@ -277,6 +277,7 @@ namespace ZipFileDemo
 
                         break;
                 }
+                
                 features.Clear();
             }
             catch (Exception e)

@@ -16,7 +16,7 @@ namespace ZipFileDemo
     {
         private ReadFromFile r_File = new ReadFromFile();
         private string temp_File = @"temp.txt";
-        private string dest_file = null;
+        //private string dest_file = null;
         public Form1()
         {
             InitializeComponent();
@@ -78,23 +78,33 @@ namespace ZipFileDemo
 
                 string _SourcePath = @"" + openFileDialog1.FileName;
 
-                string filenameWithoutPath = Path.GetFileNameWithoutExtension(openFileDialog1.FileName);
+                string owner = Path.GetFileNameWithoutExtension(openFileDialog1.FileName);
                 
                 foreach (ZipArchiveEntry entry in zip.Entries)
                 {
                     
-                    if (entry.FullName.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
+                    if (entry.FullName.EndsWith(".cs", StringComparison.OrdinalIgnoreCase)&&
+                        (!(entry.FullName.Contains("Resources")))&&
+                        (!(entry.FullName.Contains("AssemblyInfo"))) && 
+                        (!(entry.FullName.Contains("Settings"))) &&
+                        (!(entry.FullName.Contains("Form"))) &&
+                        (!(entry.FullName.Contains("Program")))&&
+                        (!(entry.FullName.Contains("Temp"))))
                     {
-                      
 
-                        dest_file = filenameWithoutPath + ".txt";
+
+
+                        //dest_file = filenameWithoutPath + ".txt";
+                        string dest_file = Path.GetFileNameWithoutExtension(entry.Name)+".txt";
+                        string dest_file_c = Path.GetFileNameWithoutExtension(entry.Name);
+                        
                         entry.ExtractToFile(temp_File);
                         string[] content_temp = File.ReadAllLines(temp_File);
 
 
                         if (!File.Exists(dest_file)) { 
                             File.Copy(temp_File, dest_file);
-                            
+                           
                         }
                         else { 
                             File.AppendAllLines(dest_file, content_temp);
@@ -102,10 +112,11 @@ namespace ZipFileDemo
                         }
 
                         File.Delete(temp_File);
-  
+                        r_File.Read_fileread(dest_file, dest_file_c + "_to_count.txt", "main_file.txt", owner);
                     }
+                    
                 }
-                r_File.Read_fileread(dest_file, filenameWithoutPath + "_to_count.txt", "main_file.txt", filenameWithoutPath);
+                //r_File.Read_fileread(dest_file, filenameWithoutPath + "_to_count.txt", "main_file.txt", filenameWithoutPath);
             }
         }
 
