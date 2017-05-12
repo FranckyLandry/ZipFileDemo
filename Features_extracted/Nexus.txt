@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Starcraft2
+{
+    public class Nexus : IBase
+    {
+        private List<string> tasks;
+        private Random random;
+
+        public Nexus()
+        {
+            tasks = new List<string> { "Research", "Pylon", "Zealot", "High templar", "Oracle" };
+            random = new Random();
+        }
+
+        public void Draw(Graphics gr, Point p)
+        {
+            Image img = new Bitmap(Properties.Resources.nexus);
+            gr.DrawImage(img, p);
+        }
+
+        public string TaskComplete()
+        {
+            return tasks[random.Next(0, tasks.Count)] + " complete";
+        }
+    }
+}

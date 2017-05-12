@@ -14,15 +14,15 @@ namespace ZipFileDemo
 {
     public partial class Form1 : Form
     {
-        private ReadFromFile r_File = new ReadFromFile();
-        private string temp_File = @"temp.txt";
+        private Fileprocess file_process = new Fileprocess();
+        
         //private string dest_file = null;
         public Form1()
         {
             InitializeComponent();
         }
 
-        private bool isFolder = false;
+        private bool _IsFolder = false;
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -31,7 +31,7 @@ namespace ZipFileDemo
             {
                 string[] files = openFileDialog1.FileNames;
                 textBox1.Text = string.Join(",", files);
-                isFolder = false;
+                _IsFolder = false;
             }
         }
 
@@ -41,26 +41,26 @@ namespace ZipFileDemo
             if (result == DialogResult.OK)
             {
                 textBox1.Text = folderBrowserDialog1.SelectedPath;
-                isFolder = true;
+                _IsFolder = true;
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            DialogResult result=saveFileDialog1.ShowDialog();
-            if(result==DialogResult.OK)
+            DialogResult result = saveFileDialog1.ShowDialog();
+            if (result == DialogResult.OK)
             {
-                if(isFolder)
+                if (_IsFolder)
                 {
                     ZipFile.CreateFromDirectory(textBox1.Text, saveFileDialog1.FileName);
                 }
                 else
                 {
-                    string[] files=textBox1.Text.Split(',');
+                    string[] files = textBox1.Text.Split(',');
                     ZipArchive zip = ZipFile.Open(saveFileDialog1.FileName, ZipArchiveMode.Create);
-                    foreach(string file in files)
+                    foreach (string file in files)
                     {
-                        zip.CreateEntryFromFile(file, Path.GetFileName(file),CompressionLevel.Optimal);
+                        zip.CreateEntryFromFile(file, Path.GetFileName(file), CompressionLevel.Optimal);
                     }
                     zip.Dispose();
                 }
@@ -71,50 +71,25 @@ namespace ZipFileDemo
         private void button4_Click(object sender, EventArgs e)
         {
             DialogResult result = openFileDialog1.ShowDialog();
-            
+
             if (result == DialogResult.OK)
             {
-                ZipArchive zip = ZipFile.OpenRead(openFileDialog1.FileName);
+                var zip_Folder = ZipFile.OpenRead(openFileDialog1.FileName);
 
-                string _SourcePath = @"" + openFileDialog1.FileName;
+                var _SourcePath = @"" + openFileDialog1.FileName;
 
-                string owner = Path.GetFileNameWithoutExtension(openFileDialog1.FileName);
+                var _FileOwner = Path.GetFileNameWithoutExtension(openFileDialog1.FileName);
                 
-                foreach (ZipArchiveEntry entry in zip.Entries)
+
+                foreach (ZipArchiveEntry entry in zip_Folder.Entries)
                 {
-                    
-                    if (entry.FullName.EndsWith(".cs", StringComparison.OrdinalIgnoreCase)&&
-                        (!(entry.FullName.Contains("Resources")))&&
-                        (!(entry.FullName.Contains("AssemblyInfo"))) && 
-                        (!(entry.FullName.Contains("Settings"))) &&
-                        (!(entry.FullName.Contains("Form"))) &&
-                        (!(entry.FullName.Contains("Program")))&&
-                        (!(entry.FullName.Contains("Temp"))))
+
+                    if (file_process.GetOnlyClass(entry))
                     {
-
-
-
-                        //dest_file = filenameWithoutPath + ".txt";
-                        string dest_file = Path.GetFileNameWithoutExtension(entry.Name)+".txt";
-                        string dest_file_c = Path.GetFileNameWithoutExtension(entry.Name);
-                        
-                        entry.ExtractToFile(temp_File);
-                        string[] content_temp = File.ReadAllLines(temp_File);
-
-
-                        if (!File.Exists(dest_file)) { 
-                            File.Copy(temp_File, dest_file);
-                           
-                        }
-                        else { 
-                            File.AppendAllLines(dest_file, content_temp);
-                            
-                        }
-
-                        File.Delete(temp_File);
-                        r_File.Read_fileread(dest_file, dest_file_c + "_to_count.txt", "main_file.txt", owner);
+                        file_process.GetContent(file_process.DestinationFile(entry), entry);
+                        file_process.ProcessingFile(file_process.DestinationFile(entry), file_process.Count_file(_FileOwner), file_process.final_File, _FileOwner);
                     }
-                    
+
                 }
                 //r_File.Read_fileread(dest_file, filenameWithoutPath + "_to_count.txt", "main_file.txt", filenameWithoutPath);
             }
@@ -130,7 +105,7 @@ namespace ZipFileDemo
                 if (result2 == DialogResult.OK)
                 {
                     ZipFile.ExtractToDirectory(openFileDialog1.FileName, folderBrowserDialog1.SelectedPath);
-                    
+
                     MessageBox.Show("ZIP file extracted successfully!");
                 }
             }

@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace visitor
+{
+    class ObjectStructure
+    {
+        private List<IVisitable> items = new List<IVisitable>();
+        public void Accept(IVisitor visitor)
+        {
+            foreach (IVisitable iv in items)
+            {
+                iv.Accept(visitor);
+            }
+        }
+    }
+}

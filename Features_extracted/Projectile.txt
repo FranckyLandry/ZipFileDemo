@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArmorTest
+{
+    public abstract class Projectile : IProjectile
+    {
+        protected Random rnjesus;
+        public abstract double TrueDamage { get; set; }
+
+        public abstract void Damage(LightArmor la);
+
+        public abstract void Damage(HeavyArmor ha);
+
+        public abstract void Damage(ReflectiveArmor ra);
+    }
+}

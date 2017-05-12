@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Starcraft2
+{
+    public class Pylon : IHouse
+    {
+        public void Draw(Graphics gr, Point p)
+        {
+            Image img = new Bitmap(Properties.Resources.pylon);
+            gr.DrawImage(img, p);
+        }
+
+        public string Message()
+        {
+            return "Capacity increased by 10";
+        }
+    }
+}

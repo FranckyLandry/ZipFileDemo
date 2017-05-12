@@ -3,20 +3,88 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Reflection;
+using System.IO.Compression;
 
 namespace ZipFileDemo
 {
-    class ReadFromFile
+    class Fileprocess
     {
-        private String line;
-        private int counter = 0;
-        private List<string> temp_word_splited_list = new List<string>();
-        private List<Tuple<string, int>> wordCounted_splited = new List<Tuple<string, int>>();
-        private ArrayList features = new ArrayList();
+
+        private string temp_File;
+
+
+
+        public string final_File;
+
+
+        public Fileprocess()
+        {
+            temp_File = "temp.txt";
+            final_File = "main_file.txt";
+        }
+
+
+
+
+
+
+        public void GetContent(string _DestinationFile, ZipArchiveEntry entry)
+        {
+             
+            entry.ExtractToFile(temp_File);
+            string[] content_temp = File.ReadAllLines(temp_File);
+
+
+            if (!File.Exists(_DestinationFile))
+            {
+                File.Copy(temp_File, _DestinationFile);
+               
+            }
+            else
+            {
+                File.AppendAllLines(_DestinationFile, content_temp);
+
+            }
+            File.Delete(temp_File);
+
+        }
+
+
+
+        public string Count_file(string name)
+        {
+            string count_file = name + "count.txt";
+            return count_file;
+        }
+
+        public string DestinationFile(ZipArchiveEntry entry)
+        {
+            string dest_file = Path.ChangeExtension(entry.Name, ".txt");
+            return dest_file;
+
+
+        }
+
+
+
+        public bool GetOnlyClass(ZipArchiveEntry entry)
+        {
+            if (entry.FullName.EndsWith(".cs", StringComparison.OrdinalIgnoreCase) &&
+                                       (!(entry.FullName.Contains("Resources"))) &&
+                                       (!(entry.FullName.Contains("AssemblyInfo"))) &&
+                                       (!(entry.FullName.Contains("Settings"))) &&
+                                       (!(entry.FullName.Contains("Form"))) &&
+                                       (!(entry.FullName.Contains("Program"))) &&
+                                       (!(entry.FullName.Contains("Temp"))))
+                return true;
+            else
+                return false;
+
+        }
+
+
+
+
 
 
         public void Save_File(string[] content, string destination)
@@ -38,18 +106,19 @@ namespace ZipFileDemo
 
         }
 
-        public void Read_fileread(string source_file, string file_tosave, string file_features_to_save, string owner)
+        public void ProcessingFile(string source_file, string count_file, string finalFile, string owner)
         {
+            String line;
             var temp_store = new KeyValuePair<string, int>();
-
-            string pathSource = source_file;
-            string pathNew = file_tosave;
+            List<Tuple<string, int>> wordCounted_splited = new List<Tuple<string, int>>();
+            List<string> temp_word_splited_list = new List<string>();
+            int counter = 0;
+         
 
             try
             {
 
-
-
+               
                 StreamReader sr = new StreamReader(source_file);
 
 
@@ -71,7 +140,6 @@ namespace ZipFileDemo
                         {
                             if (!temp_word_splited_list.Contains(w))
                             {
-
 
                                 temp_word_splited_list.Add(w);
 
@@ -121,7 +189,7 @@ namespace ZipFileDemo
                 {
 
                     //Pass the filepath and filename to the StreamWriter Constructor
-                    StreamWriter sw = new StreamWriter(file_tosave);
+                    StreamWriter sw = new StreamWriter(count_file);
 
                     for (int i = 0; i < wordCounted_splited.Count(); i++)
                     {
@@ -133,7 +201,8 @@ namespace ZipFileDemo
                     //Close the file
                     sw.Close();
                     //System.Threading.Thread.Sleep(1);
-                    Get_Features_Value(wordCounted_splited, file_features_to_save, owner);
+                    Get_Features_Value(wordCounted_splited, finalFile, owner);
+
 
                 }
                 catch (Exception e)
@@ -142,7 +211,7 @@ namespace ZipFileDemo
                 }
                 finally
                 {
-                    
+
                     Console.WriteLine("Executing finally block.");
 
                 }
@@ -151,10 +220,10 @@ namespace ZipFileDemo
         }
 
 
-        public ArrayList ReadFeatures()
+        private ArrayList ReadFeatures()
         {
-
-            String line;
+             var features = new ArrayList();
+             String line;
 
             try
             {
@@ -206,7 +275,8 @@ namespace ZipFileDemo
                     {
                         if (counted_features[i].Item1 == f)
                         {
-                            content.Add(new Tuple<string, int>(counted_features[i].Item1, counted_features[i].Item2));
+                            //content.Add(new Tuple<string, int>(counted_features[i].Item1, counted_features[i].Item2));
+                            content.Add(counted_features[i]);
                         }
                     }
                 }
@@ -243,7 +313,7 @@ namespace ZipFileDemo
 
                         for (int i = 0; i < features.Count; i++)
                         {
-                            System.Threading.Thread.Sleep(1);
+                            //System.Threading.Thread.Sleep(1);
 
                             if (first == false)
                             {
@@ -277,7 +347,7 @@ namespace ZipFileDemo
 
                         break;
                 }
-                
+
                 features.Clear();
             }
             catch (Exception e)

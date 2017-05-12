@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Starcraft2
+{
+    public class Hydralisk : IRangedUnit
+    {
+        public void Draw(Graphics gr, Point p)
+        {
+            Image img = new Bitmap(Properties.Resources.hydralisk);
+            gr.DrawImage(img, p);
+        }
+
+        public string Attack()
+        {
+            return "*hissing*";
+        }
+    }
+}

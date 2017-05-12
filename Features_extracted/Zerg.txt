@@ -1,0 +1,36 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Starcraft2
+{
+    public class Zerg : IStarcraft
+    {
+        public IBase CreateBase()
+        {
+            return new Hatchery();
+        }
+
+        public IHouse CreateHouse()
+        {
+            return new Overlord();
+        }
+
+        public IWorker CreateWorker()
+        {
+            return new Drone();
+        }
+
+        public IMaleeUnit CreateMaleeUnit()
+        {
+            return new Zergling();
+        }
+
+        public IRangedUnit CreateRangedUnit()
+        {
+            return new Hydralisk();
+        }
+    }
+}

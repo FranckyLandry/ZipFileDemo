@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArmorTest
+{
+    public interface IProjectile
+    {
+        void Damage(LightArmor la);
+        void Damage(HeavyArmor ha);
+        void Damage(ReflectiveArmor ra);
+    }
+}

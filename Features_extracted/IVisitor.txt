@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace visitor
+{
+    public interface IVisitor
+    {
+         string visit(Parfume parfumeItem);
+         string visit(Alcohol alcoholItem);
+         string visit(Chocolate chocolateItem);
+        
+    }
+}

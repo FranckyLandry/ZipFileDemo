@@ -19,9 +19,9 @@ C:\Users\Beheerders\Desktop\Grad_test_App\ZipFileDemo\obj\Debug\ZipFileDemo.cspr
 C:\Users\Beheerders\Documents\GitHub\ZipFileDemo\bin\Debug\ZipFileDemo.exe.config
 C:\Users\Beheerders\Documents\GitHub\ZipFileDemo\bin\Debug\ZipFileDemo.exe
 C:\Users\Beheerders\Documents\GitHub\ZipFileDemo\bin\Debug\ZipFileDemo.pdb
+C:\Users\Beheerders\Documents\GitHub\ZipFileDemo\obj\Debug\ZipFileDemo.csprojResolveAssemblyReference.cache
 C:\Users\Beheerders\Documents\GitHub\ZipFileDemo\obj\Debug\ZipFileDemo.Form1.resources
 C:\Users\Beheerders\Documents\GitHub\ZipFileDemo\obj\Debug\ZipFileDemo.Properties.Resources.resources
 C:\Users\Beheerders\Documents\GitHub\ZipFileDemo\obj\Debug\ZipFileDemo.csproj.GenerateResource.Cache
 C:\Users\Beheerders\Documents\GitHub\ZipFileDemo\obj\Debug\ZipFileDemo.exe
 C:\Users\Beheerders\Documents\GitHub\ZipFileDemo\obj\Debug\ZipFileDemo.pdb
-C:\Users\Beheerders\Documents\GitHub\ZipFileDemo\obj\Debug\ZipFileDemo.csprojResolveAssemblyReference.cache

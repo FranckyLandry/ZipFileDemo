@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArmorTest
+{
+    public class Bullet : Projectile
+    {
+        public override double TrueDamage { get; set; }
+
+        public Bullet()
+        {
+            TrueDamage = 75;
+            rnjesus = new Random();
+        }
+
+        public override void Damage(LightArmor la)
+        {
+            la.Durability -= (TrueDamage * (rnjesus.Next(85, 101))) / 100;
+        }
+
+        public override void Damage(HeavyArmor ha)
+        {
+            ha.Durability -= (TrueDamage * (rnjesus.Next(40, 81))) / 100;
+        }
+
+        public override void Damage(ReflectiveArmor ra)
+        {
+            //cannot penetrate this type of armor
+        }
+    }
+}

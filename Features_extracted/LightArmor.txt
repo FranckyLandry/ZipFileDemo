@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ArmorTest
+{
+    public class LightArmor : Armor
+    {
+        public override double Durability { get; set; }
+
+        public LightArmor() { Durability = 500; }
+
+        public override void Repair()
+        {
+            Durability = 500;
+        }
+
+        public override void Tank(Projectile p)
+        {
+            p.Damage(this);
+            if (Durability <= 0)
+            {
+                throw new DeadException("You are dead! Please repair the armor or choose another one!");
+            }
+        }
+    }
+}

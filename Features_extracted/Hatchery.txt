@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Starcraft2
+{
+    public class Hatchery : IBase
+    {
+        private List<string> tasks;
+        private Random random;
+
+        public Hatchery()
+        {
+            tasks = new List<string>() { "Research", "Overlord", "Zergling", "Queen", "Mutalisk" };
+            random = new Random();
+        }
+
+        public void Draw(Graphics gr, Point p)
+        {
+            Image img = new Bitmap(Properties.Resources.hatchery);
+            gr.DrawImage(img, p);
+        }
+
+        public string TaskComplete()
+        {
+            return tasks[random.Next(0, tasks.Count)] + " complete";
+        }
+    }
+}

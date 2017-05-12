@@ -1,0 +1,36 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Starcraft2
+{
+    public class Protoss : IStarcraft
+    {
+        public IBase CreateBase()
+        {
+            return new Nexus();
+        }
+
+        public IHouse CreateHouse()
+        {
+            return new Pylon();
+        }
+
+        public IWorker CreateWorker()
+        {
+            return new Probe();
+        }
+
+        public IMaleeUnit CreateMaleeUnit()
+        {
+            return new Zealot();
+        }
+
+        public IRangedUnit CreateRangedUnit()
+        {
+            return new Stalker();
+        }
+    }
+}
