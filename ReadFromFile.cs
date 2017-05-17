@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.IO.Compression;
+using System.Text.RegularExpressions;
+using System.Reflection;
+
+
 
 namespace ZipFileDemo
 {
@@ -12,7 +16,12 @@ namespace ZipFileDemo
 
         private string temp_File;
 
-
+        public List<string> typeOf_variables = new List<string>(new string[] {
+                                                    "public void","public int","public string","public List<string>","public List<int>",
+                                                    "private void","private int","private string","private List<string>","private List<int>",
+                                                    "protected void","protected int","protected string","protected List<string>","protected List<int>",
+                                                     "public ArrayList","private ArrayList","protected ArrayList"
+                                                });
 
         public string final_File;
 
@@ -23,8 +32,98 @@ namespace ZipFileDemo
             final_File = "main_file.txt";
         }
 
+        public Array aia()
+        {
+            return null;
+        }
 
 
+       
+
+        public void ReadingSignature()
+        {
+            var list_type_methods = new List<string>(new string[] {
+                                                    "public void","public int","public string","public List<string>","public List<int>",
+                                                    "private void","private int","private string","private List<string>","private List<int>",
+                                                    "protected void","protected int","protected string","protected List<string>","protected List<int>",
+                                                     "public ArrayList","private ArrayList","protected ArrayList"
+                                                });
+
+
+
+
+            //foreach (var item in list_type_methods)
+            //{
+            //    Regex re = new Regex("["+item + "-\\s A-Za-z-("+typeof""+-]");
+            //}
+            //"[A - Za - z0 - 9\s]{ 1, }$")
+
+          
+        }
+
+
+        public List<string> GetAllSignatureMehod(string strFileName)
+        {
+            List<string> methodNames = new List<string>();
+            //var strMethodLines = File.ReadAllLines()
+            var strMethodLines = File.ReadAllLines(strFileName)
+                                        .Where(a => (a.Contains("protected") ||
+                                                    a.Contains("private") ||
+                                                    a.Contains("public")) &&
+                                                    !a.Contains("_") && !a.Contains("class"));
+            foreach (var item in strMethodLines)
+            {
+                if (item.IndexOf("(") != -1)
+                {
+                    methodNames.Add(item);
+                    //string strTemp = String.Join("", item.Substring(0, item.IndexOf("(")).Reverse());
+                    //methodNames.Add(String.Join("", strTemp.Substring(0, strTemp.IndexOf(" ")).Reverse()));
+                }
+            }
+            return methodNames;
+        }
+
+
+        //public List<string> GetAllMethodNames(string strFileName)
+        //{
+        //    List<string> methodNames = new List<string>();
+        //    //var strMethodLines = File.ReadAllLines()
+        //    var strMethodLines = File.ReadAllLines(strFileName)
+        //                                .Where(a => (a.Contains("protected") ||
+        //                                            a.Contains("private") ||
+        //                                            a.Contains("public")) &&
+        //                                            !a.Contains("_") && !a.Contains("class"));
+        //    foreach (var item in strMethodLines)
+        //    {
+        //        if (item.IndexOf("(") != -1)
+        //        {
+        //            string strTemp = String.Join("", item.Substring(0, item.IndexOf("(")).Reverse());
+        //            methodNames.Add(String.Join("", strTemp.Substring(0, strTemp.IndexOf(" ")).Reverse()));
+        //        }
+        //    }
+        //    return methodNames.Distinct().ToList();
+        //}
+
+
+
+        //public  IEnumerable<MethodInfo> GetMethodsBySig(this Type type, Type returnType, params Type[] parameterTypes)
+        //{
+        //    return type.GetMethods().Where((m) =>
+        //    {
+        //        if (m.ReturnType != returnType) return false;
+        //        var parameters = m.GetParameters();
+        //        if ((parameterTypes == null || parameterTypes.Length == 0))
+        //            return parameters.Length == 0;
+        //        if (parameters.Length != parameterTypes.Length)
+        //            return false;
+        //        for (int i = 0; i < parameterTypes.Length; i++)
+        //        {
+        //            if (parameters[i].ParameterType != parameterTypes[i])
+        //                return false;
+        //        }
+        //        return true;
+        //    });
+        //}
 
 
 

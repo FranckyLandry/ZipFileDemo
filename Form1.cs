@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.IO.Compression;
@@ -79,13 +72,16 @@ namespace ZipFileDemo
                 var _SourcePath = @"" + openFileDialog1.FileName;
 
                 var _FileOwner = Path.GetFileNameWithoutExtension(openFileDialog1.FileName);
-                
 
+                
                 foreach (ZipArchiveEntry entry in zip_Folder.Entries)
                 {
-
+                    
                     if (file_process.GetOnlyClass(entry))
                     {
+
+                        
+
                         file_process.GetContent(file_process.DestinationFile(entry), entry);
                         file_process.ProcessingFile(file_process.DestinationFile(entry), file_process.Count_file(_FileOwner), file_process.final_File, _FileOwner);
                     }
@@ -111,7 +107,13 @@ namespace ZipFileDemo
             }
         }
 
-
-
+        private void button6_Click(object sender, EventArgs e)
+        {
+           var test =  file_process.GetAllSignatureMehod("Laser.txt");
+            foreach (string s in test)
+            {
+                Console.WriteLine(s);
+            }
+        }
     }
 }
