@@ -1,0 +1,111 @@
+returnTypeOfMethod,nberOfParam,nameOfMethod,owner
+void,0,Repair,ArmorTest
+void,1,Tank,ArmorTest
+public,0,Bullet,ArmorTest
+void,1,Damage,ArmorTest
+void,1,Damage,ArmorTest
+void,1,Damage,ArmorTest
+public,1,DeadException,ArmorTest
+public,0,HeavyArmor,ArmorTest
+void,0,Repair,ArmorTest
+void,1,Tank,ArmorTest
+public,0,Laser,ArmorTest
+void,1,Damage,ArmorTest
+void,1,Damage,ArmorTest
+void,1,Damage,ArmorTest
+public,0,LightArmor,ArmorTest
+void,0,Repair,ArmorTest
+void,1,Tank,ArmorTest
+void,1,Damage,ArmorTest
+void,1,Damage,ArmorTest
+void,1,Damage,ArmorTest
+public,0,ReflectiveArmor,ArmorTest
+void,0,Repair,ArmorTest
+void,1,Tank,ArmorTest
+public,0,Rocket,ArmorTest
+void,1,Damage,ArmorTest
+void,1,Damage,ArmorTest
+void,1,Damage,ArmorTest
+public,2,Client,Car factory
+string,0,CreateCarOfTypeHybrid,Car factory
+string,0,CreateCarOfTypeLimousine,Car factory
+string,0,ReturnCarType,Car factory
+string,0,ReturnCarType,Car factory
+string,0,ReturnCarBrand,Car factory
+public,0,OpelFactory,Car factory
+string,0,CreateCarTypeHybrid,Car factory
+string,0,CreateCarTypeLimousine,Car factory
+string,0,ReturnCarBrand,Car factory
+public,0,ToyotaFactory,Car factory
+string,0,CreateCarTypeHybrid,Car factory
+string,0,CreateCarTypeLimousine,Car factory
+string,1,ChangeClothes,Abstract Factory
+string,1,TakeShower,Abstract Factory
+ICharacter,0,CreateCharacter,Abstract Factory
+IHouse,0,CreateHouse,Abstract Factory
+IFood,0,CreateFood,Abstract Factory
+string,1,GoShopping,Abstract Factory
+string,0,Cook,Abstract Factory
+string,0,Build,Abstract Factory
+string,0,Decorate,Abstract Factory
+string,0,Clean,Abstract Factory
+string,1,ChangeClothes,Abstract Factory
+string,1,TakeShower,Abstract Factory
+ICharacter,0,CreateCharacter,Abstract Factory
+IHouse,0,CreateHouse,Abstract Factory
+IFood,0,CreateFood,Abstract Factory
+string,1,GoShopping,Abstract Factory
+string,0,Cook,Abstract Factory
+string,0,Build,Abstract Factory
+string,0,Decorate,Abstract Factory
+string,0,Clean,Abstract Factory
+public,2,CarDealer,AbstractFactoryCarDealer
+void,1,MakeCar,AbstractFactoryCarDealer
+string,0,ToString,AbstractFactoryCarDealer
+public,1,CompactCar,AbstractFactoryCarDealer
+string,0,ToString,AbstractFactoryCarDealer
+string,0,ReturnCarType,AbstractFactoryCarDealer
+public,1,Hybrid,AbstractFactoryCarDealer
+string,0,ToString,AbstractFactoryCarDealer
+string,0,ReturnCarType,AbstractFactoryCarDealer
+public,1,Limousine,AbstractFactoryCarDealer
+string,0,ToString,AbstractFactoryCarDealer
+public,0,OpelCompactCar,AbstractFactoryCarDealer
+public,0,OpelFactory,AbstractFactoryCarDealer
+string,0,CreateCarTypeHybrid,AbstractFactoryCarDealer
+string,0,CreateCarTypeLimousine,AbstractFactoryCarDealer
+CompactCar,0,AssembleCompactCar,AbstractFactoryCarDealer
+Hybrid,0,AssembleHybrid,AbstractFactoryCarDealer
+Limousine,0,AssembleLimousine,AbstractFactoryCarDealer
+SUV,0,AssembleSUV,AbstractFactoryCarDealer
+public,0,OpelHybrid,AbstractFactoryCarDealer
+public,0,OpelLimousine,AbstractFactoryCarDealer
+public,0,OpelSUV,AbstractFactoryCarDealer
+public,1,SUV,AbstractFactoryCarDealer
+string,0,ToString,AbstractFactoryCarDealer
+public,0,ToyotaCompactCar,AbstractFactoryCarDealer
+public,0,ToyotaFactory,AbstractFactoryCarDealer
+string,0,CreateCarTypeHybrid,AbstractFactoryCarDealer
+string,0,CreateCarTypeLimousine,AbstractFactoryCarDealer
+CompactCar,0,AssembleCompactCar,AbstractFactoryCarDealer
+Hybrid,0,AssembleHybrid,AbstractFactoryCarDealer
+Limousine,0,AssembleLimousine,AbstractFactoryCarDealer
+SUV,0,AssembleSUV,AbstractFactoryCarDealer
+public,0,ToyotaHybrid,AbstractFactoryCarDealer
+public,0,ToyotaLimousine,AbstractFactoryCarDealer
+public,0,ToyotaSUV,AbstractFactoryCarDealer
+public,2,Alcohol,visitor
+void,1,Accept,visitor
+public,2,Chocolate,visitor
+void,1,Accept,visitor
+void,1,Accept,visitor
+new,0,List<IVisitable>,visitor
+void,1,Accept,visitor
+public,2,Parfume,visitor
+void,1,Accept,visitor
+string,1,visit,visitor
+string,1,visit,visitor
+string,1,visit,visitor
+string,1,visit,visitor
+string,1,visit,visitor
+string,1,visit,visitor

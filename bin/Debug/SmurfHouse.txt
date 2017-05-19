@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Minion_SmurfGame
+{
+    public class SmurfHouse : IHouse
+    {
+        public string Build()
+        {
+            return "Build it as small as possible!!!!";
+        }
+
+        public string Decorate()
+        {
+            return "Small but lovely, that's a smurfy house";
+        }
+
+        public string Clean()
+        {
+            return "It is tiny, so it takes time!";
+        }
+    }
+}

@@ -1,0 +1,57 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Car_factory
+{
+    class ToyotaFactory : ICarFactory
+    {
+        ICarBrand brand;
+        public ToyotaFactory()
+        {
+            brand = new Toyota();
+        }
+        public string CreateCarTypeHybrid()
+        {
+             ITypeOfCar type = new Hybrid();
+            return "A " + type + " " + brand.ReturnCarBrand();
+
+        }
+        public string CreateCarTypeLimousine()
+        {
+            ITypeOfCar type = new Limousine();
+            return "A " + type + " " + brand.ReturnCarBrand();
+        }
+    }
+}using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public class ToyotaFactory : AutomobileFactory
+    {
+        public CompactCar AssembleCompactCar()
+        {
+            return new ToyotaCompactCar();
+        }
+
+        public Hybrid AssembleHybrid()
+        {
+            return new ToyotaHybrid();
+        }
+
+        public Limousine AssembleLimousine()
+        {
+            return new ToyotaLimousine();
+        }
+
+        public SUV AssembleSUV()
+        {
+            return new ToyotaSUV();
+        }
+    }
+}

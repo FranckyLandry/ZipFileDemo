@@ -1,0 +1,57 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public class CarDealer
+    {
+        public List<CompactCar> compactCars;
+        public List<Limousine> limousines;
+        public List<SUV> SUVs;
+        public List<Hybrid> hybrids;
+        private AutomobileFactory factory;
+        private Brands brand;
+
+        public CarDealer(AutomobileFactory factory, Brands brand)
+        {
+            this.factory = factory;
+            this.brand = brand;
+            compactCars = new List<CompactCar>();
+            limousines = new List<Limousine>();
+            SUVs = new List<SUV>();
+            hybrids = new List<Hybrid>();
+        }
+
+        public void MakeCar(Cars type)
+        {
+            switch (type)
+            {
+                case Cars.CompactCar:
+                    CompactCar cc = factory.AssembleCompactCar();
+                    compactCars.Add(cc);
+                    break;
+                case Cars.Limousine:
+                    Limousine l = factory.AssembleLimousine();
+                    limousines.Add(l);
+                    break;
+                case Cars.SUV:
+                    SUV suv = factory.AssembleSUV();
+                    SUVs.Add(suv);
+                    break;
+                case Cars.Hybrid:
+                    Hybrid h = factory.AssembleHybrid();
+                    hybrids.Add(h);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public override string ToString()
+        {
+            return brand.ToString() + " dealer";
+        }
+    }
+}

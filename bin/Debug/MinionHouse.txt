@@ -1,0 +1,27 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Drawing;
+
+namespace Minion_SmurfGame
+{
+    public class MinionHouse : IHouse
+    {
+        public string Build()
+        {
+            return "Build one, not destroy one!";
+        }
+
+        public string Decorate()
+        {
+            return "Minions are skillful artisan, this is my job!";
+        }
+
+        public string Clean()
+        {
+            return "Oh shit, where is the house? Did I explode it? Shouldn't it be incombustible???? Master will kill me!!!";
+        }
+    }
+}

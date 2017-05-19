@@ -1,0 +1,17 @@
+﻿namespace AbstractFactoryCarDealer
+{
+    public abstract class CompactCar
+    {
+        protected string brand;
+
+        public CompactCar(string brand)
+        {
+            this.brand = brand;
+        }
+
+        public override string ToString()
+        {
+            return brand + " " + Cars.CompactCar.ToString();
+        }
+    }
+}

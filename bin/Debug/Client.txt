@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Car_factory
+{
+    public class Client
+    {
+        string name;
+        public string Name { get { return name; } }
+
+        ICarFactory carFactory;
+
+        public Client(ICarFactory factory, string inName)
+        {
+            this.name = inName;
+            this.carFactory = factory;
+        }
+
+        public string CreateCarOfTypeHybrid()
+        {
+            return carFactory.CreateCarTypeHybrid();
+        }
+        public string CreateCarOfTypeLimousine()
+        {
+            return carFactory.CreateCarTypeLimousine();
+        }
+    }
+}

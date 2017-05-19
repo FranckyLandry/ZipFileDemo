@@ -1,0 +1,25 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace visitor
+{
+    public class Alcohol : IVisitable
+    {
+        public double Price { get; set; }
+        public string Name { get; set; }
+
+        public Alcohol(double item, string name)
+        {
+            this.Price = item;
+            this.Name = name;
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+           visitor.visit(this);
+        }
+    }
+}

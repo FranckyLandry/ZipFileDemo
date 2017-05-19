@@ -80,10 +80,28 @@ namespace ZipFileDemo
                     if (file_process.GetOnlyClass(entry))
                     {
 
-                        
 
                         file_process.GetContent(file_process.DestinationFile(entry), entry);
-                        file_process.ProcessingFile(file_process.DestinationFile(entry), file_process.Count_file(_FileOwner), file_process.final_File, _FileOwner);
+                        //file_process.ProcessingFile(file_process.DestinationFile(entry), file_process.Count_file(_FileOwner), file_process.final_File, _FileOwner);
+
+
+
+
+                        var getSignature = file_process.GetAllSignatureMethod(file_process.DestinationFile(entry));
+
+                        //var content = file_process.GetMethodContent(getSignature);
+
+                        var test = file_process.Layer(getSignature,_FileOwner);
+                        file_process.SaveLayerProcess(test, "features1.txt");
+
+                        //foreach (string s in getSignature)
+                        //{
+                        //    Console.WriteLine(s);
+                        //}
+
+                        
+
+
                     }
 
                 }
@@ -109,8 +127,9 @@ namespace ZipFileDemo
 
         private void button6_Click(object sender, EventArgs e)
         {
-           var test =  file_process.GetAllSignatureMehod("Laser.txt");
-            foreach (string s in test)
+            var getSignature = file_process.GetAllSignatureMethod("Armor.txt");
+           var a =  file_process.GetMethodContent(getSignature);
+            foreach (string s in getSignature)
             {
                 Console.WriteLine(s);
             }

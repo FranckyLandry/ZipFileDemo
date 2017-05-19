@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Car_factory
+{
+    public class Hybrid : ITypeOfCar
+    {
+        public string ReturnCarType()
+        {
+            return "Hybrid";
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public abstract class Hybrid
+    {
+        protected string brand;
+
+        public Hybrid(string brand)
+        {
+            this.brand = brand;
+        }
+        public override string ToString()
+        {
+            return brand + " " + Cars.Hybrid.ToString();
+        }
+    }
+}

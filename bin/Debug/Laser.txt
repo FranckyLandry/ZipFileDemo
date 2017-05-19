@@ -9,9 +9,6 @@ namespace ArmorTest
     public class Laser : Projectile
     {
         public override double TrueDamage { get; set; }
-	
-	private int name;
-	public string age;
 
         public Laser()
         {

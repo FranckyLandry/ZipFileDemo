@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace visitor
+{
+   public class TaxVisitor : IVisitor
+    {
+
+        public string visit(Chocolate chocolateItem)
+        {
+            return chocolateItem.Name + "\n Original price = " + chocolateItem.Price+  "\n Price + Tax = " + (chocolateItem.Price* 0.01 + chocolateItem.Price) + "\n---------------------------\n";
+        }
+
+        public string visit(Alcohol alcoholItem)
+        {
+            return alcoholItem.Name + "\nOriginal price = " + alcoholItem.Price + "\n Price + Tax = " + (alcoholItem.Price * 0.025 + alcoholItem.Price ) + "\n---------------------------\n";
+        }
+
+        public string visit(Parfume parfumeItem)
+        {
+            return parfumeItem.Name + "\n Original price = " + parfumeItem.Price + "\n Price + Tax = " + (parfumeItem.Price * 0.035 + parfumeItem.Price) + "\n---------------------------\n";
+        }
+
+
+    }
+}

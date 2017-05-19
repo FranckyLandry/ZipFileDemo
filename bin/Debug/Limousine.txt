@@ -1,0 +1,38 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Car_factory
+{
+    public class Limousine : ITypeOfCar
+    {
+        public string ReturnCarType()
+        {
+            return "Limousine";
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace AbstractFactoryCarDealer
+{
+    public abstract class Limousine
+    {
+        protected string brand;
+
+        public Limousine(string brand)
+        {
+            this.brand = brand;
+        }
+
+        public override string ToString()
+        {
+            return brand + " " + Cars.Limousine.ToString();
+        }
+    }
+}

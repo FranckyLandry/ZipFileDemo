@@ -10,18 +10,30 @@ using System.Reflection;
 
 
 namespace ZipFileDemo
+/*
+    * regular expression
+    * 
+    * \(             # Escaped parenthesis, means "starts with a '(' character"
+(          # Parentheses in a regex mean "put (capture) the stuff 
+          #     in between into the Groups array" 
+  [^)]    # Any character that is not a ')' character
+  *       # Zero or more occurrences of the aforementioned "non ')' char"
+)          # Close the capturing group
+   \)             # "Ends with a ')' character"
+    * 
+    * 
+    * 
+    * */
 {
     class Fileprocess
     {
+       
 
         private string temp_File;
 
-        public List<string> typeOf_variables = new List<string>(new string[] {
-                                                    "public void","public int","public string","public List<string>","public List<int>",
-                                                    "private void","private int","private string","private List<string>","private List<int>",
-                                                    "protected void","protected int","protected string","protected List<string>","protected List<int>",
-                                                     "public ArrayList","private ArrayList","protected ArrayList"
-                                                });
+        public List<string> typeOf_statement = new List<string>(new string[] {
+                                                    "if","foreach","while","for","switch"
+                                                    });
 
         public string final_File;
 
@@ -32,50 +44,30 @@ namespace ZipFileDemo
             final_File = "main_file.txt";
         }
 
-        public Array aia()
+
+
+
+
+
+
+        public ArrayList GetAllSignatureMethod(string strFileName)
         {
-            return null;
-        }
+            ArrayList methodNames = new ArrayList();
 
-
-       
-
-        public void ReadingSignature()
-        {
-            var list_type_methods = new List<string>(new string[] {
-                                                    "public void","public int","public string","public List<string>","public List<int>",
-                                                    "private void","private int","private string","private List<string>","private List<int>",
-                                                    "protected void","protected int","protected string","protected List<string>","protected List<int>",
-                                                     "public ArrayList","private ArrayList","protected ArrayList"
-                                                });
-
-
-
-
-            //foreach (var item in list_type_methods)
-            //{
-            //    Regex re = new Regex("["+item + "-\\s A-Za-z-("+typeof""+-]");
-            //}
-            //"[A - Za - z0 - 9\s]{ 1, }$")
-
-          
-        }
-
-
-        public List<string> GetAllSignatureMehod(string strFileName)
-        {
-            List<string> methodNames = new List<string>();
-            //var strMethodLines = File.ReadAllLines()
             var strMethodLines = File.ReadAllLines(strFileName)
                                         .Where(a => (a.Contains("protected") ||
                                                     a.Contains("private") ||
                                                     a.Contains("public")) &&
-                                                    !a.Contains("_") && !a.Contains("class"));
+                                                    !a.Contains("class"));
             foreach (var item in strMethodLines)
             {
                 if (item.IndexOf("(") != -1)
                 {
                     methodNames.Add(item);
+                    
+                    //s.Split(new char[] { '{', '}' }, StringSplitOptions.RemoveEmptyEntries)
+
+                    //File.ReadAllLines(strFileName).Where(a => (a.StartsWith(item)));
                     //string strTemp = String.Join("", item.Substring(0, item.IndexOf("(")).Reverse());
                     //methodNames.Add(String.Join("", strTemp.Substring(0, strTemp.IndexOf(" ")).Reverse()));
                 }
@@ -84,52 +76,136 @@ namespace ZipFileDemo
         }
 
 
-        //public List<string> GetAllMethodNames(string strFileName)
-        //{
-        //    List<string> methodNames = new List<string>();
-        //    //var strMethodLines = File.ReadAllLines()
-        //    var strMethodLines = File.ReadAllLines(strFileName)
-        //                                .Where(a => (a.Contains("protected") ||
-        //                                            a.Contains("private") ||
-        //                                            a.Contains("public")) &&
-        //                                            !a.Contains("_") && !a.Contains("class"));
-        //    foreach (var item in strMethodLines)
-        //    {
-        //        if (item.IndexOf("(") != -1)
-        //        {
-        //            string strTemp = String.Join("", item.Substring(0, item.IndexOf("(")).Reverse());
-        //            methodNames.Add(String.Join("", strTemp.Substring(0, strTemp.IndexOf(" ")).Reverse()));
-        //        }
-        //    }
-        //    return methodNames.Distinct().ToList();
-        //}
+
+        public List<string> GetMethodContent(ArrayList signature)
+        {
+            var temp2 = new List<string>();
+           
+            try
+            {
+               
+                StreamReader sr = new StreamReader("Armor.txt");
+
+                string line;
+                
+              
+                line = sr.ReadLine();
+
+
+                while ((line = sr.ReadLine()) != null)
+                {
+
+                    foreach (var item in signature)
+                    {
+                        if (line.Contains(item.ToString()))
+                        {
+                            line = sr.ReadLine();
+                            //File.ReadAllLines()
+                           var a = Regex.Match(line, @"\{([^}]*)\}").Groups[1].Value;
+
+
+                        }
+
+                    }
+
+                }
 
 
 
-        //public  IEnumerable<MethodInfo> GetMethodsBySig(this Type type, Type returnType, params Type[] parameterTypes)
-        //{
-        //    return type.GetMethods().Where((m) =>
-        //    {
-        //        if (m.ReturnType != returnType) return false;
-        //        var parameters = m.GetParameters();
-        //        if ((parameterTypes == null || parameterTypes.Length == 0))
-        //            return parameters.Length == 0;
-        //        if (parameters.Length != parameterTypes.Length)
-        //            return false;
-        //        for (int i = 0; i < parameterTypes.Length; i++)
-        //        {
-        //            if (parameters[i].ParameterType != parameterTypes[i])
-        //                return false;
-        //        }
-        //        return true;
-        //    });
-        //}
+
+                //while ((line = sr.ReadLine()) != null)
+                //{
+
+                //    foreach (var item in signature)
+                //    {
+                //        if (line.StartsWith(item.ToString()))
+                //        {
+                //            temp2.Add(line);
+                //            line = sr.ReadLine();
+                //            while ((line != signature.IndexOf(item) + 1.ToString()) && (line != null))
+                //            {
+                //                temp2.Add(line);
+                //                line = sr.ReadLine();
+
+                //            }
+
+                //        }
+
+                //    }
+
+                //}
+
+                sr.Close();
+                
+
+            }
+            catch (Exception e)
+            {
+                // Let the user know what went wrong.
+                Console.WriteLine("The file could not be read:");
+                Console.WriteLine(e.Message);
+            }
+
+            return temp2;
+
+        }
+
+
+        public int GetNberOfMethod(ArrayList allSignatureMethod)
+        {
+            int nberOfMethod = allSignatureMethod.Count;
+            return nberOfMethod;
+        }
+
+        public List<Tuple<string,int,string,string>> Layer(ArrayList allsignatureMethod,string owner)
+        {
+
+            List<Tuple<string, int,string,string>> mydictionary = new List<Tuple<string, int,string,string>>(); 
+
+            var returnType ="";
+
+            foreach ( string item in allsignatureMethod)
+            {
+                if (item.IndexOf("(")!=-1)
+                {
+                    string strTemp = String.Join("", item.Substring(0, item.IndexOf("(")).Reverse());
+                    char [] type = strTemp.Split(' ')[1].ToCharArray();
+                    Array.Reverse(type);
+                    returnType = new string(type);
+                    
+                  
+
+                    var methodParamters = Regex.Match(item, @"\(([^)]*)\)").Groups[1].Value;
+                    MatchCollection collection = Regex.Matches(methodParamters, @"[\S]+");
+                    var nberOfParameter = collection.Count / 2;
+                    string strtemp1 = String.Join("", item.Substring(0, item.IndexOf("(")).Reverse());
+                    string nameMethod = String.Join("", strTemp.Substring(0, strTemp.IndexOf(" ")).Reverse());
+
+                    mydictionary.Add(Tuple.Create(returnType, nberOfParameter, nameMethod,owner));
+                    
+                }
+            }
+            
+            return mydictionary;
+        }
+
+
+        public void SaveLayerProcess(List<Tuple<string, int, string, string>> layercollection,string detination)
+        {
+            foreach (var layer in layercollection)
+            {
+               
+                File.AppendAllText(detination, Environment.NewLine+ "" + layer.Item1 + "," + layer.Item2 + "," + layer.Item3 + "," + layer.Item4 );
+            }
+        }
+
+
 
 
 
         public void GetContent(string _DestinationFile, ZipArchiveEntry entry)
         {
-             
+
             entry.ExtractToFile(temp_File);
             string[] content_temp = File.ReadAllLines(temp_File);
 
@@ -137,7 +213,7 @@ namespace ZipFileDemo
             if (!File.Exists(_DestinationFile))
             {
                 File.Copy(temp_File, _DestinationFile);
-               
+
             }
             else
             {
@@ -212,12 +288,12 @@ namespace ZipFileDemo
             List<Tuple<string, int>> wordCounted_splited = new List<Tuple<string, int>>();
             List<string> temp_word_splited_list = new List<string>();
             int counter = 0;
-         
+
 
             try
             {
 
-               
+
                 StreamReader sr = new StreamReader(source_file);
 
 
@@ -266,9 +342,6 @@ namespace ZipFileDemo
                                 }
 
                             }
-
-
-
                         }
                     }
 
@@ -321,8 +394,8 @@ namespace ZipFileDemo
 
         private ArrayList ReadFeatures()
         {
-             var features = new ArrayList();
-             String line;
+            var features = new ArrayList();
+            String line;
 
             try
             {
@@ -459,7 +532,7 @@ namespace ZipFileDemo
             //MethodBase b = MethodInfo.GetCurrentMethod();
 
 
-            string text = File.ReadAllText(@"main_file.txt");
+            string text = File.ReadAllText(@"main_file1.txt");
 
             if (text != "")
             {

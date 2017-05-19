@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Minion_SmurfGame
+{
+    public class SmurfFactory : AbstractFactory
+    {
+        public ICharacter CreateCharacter()
+        {
+            return (new SmurfCharacter());
+        }
+
+        public IHouse CreateHouse()
+        {
+            return (new SmurfHouse());
+        }
+
+        public IFood CreateFood()
+        {
+            return (new SmurfFood());
+        }
+    }
+}

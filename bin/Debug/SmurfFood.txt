@@ -1,0 +1,36 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Minion_SmurfGame
+{
+    public class SmurfFood : IFood
+    {
+        public string GoShopping(int amountOfMoney)
+        {
+            if (amountOfMoney > 0 && amountOfMoney < 10)
+            {
+                return "Day by day, still yummy...";
+            }
+            else if (amountOfMoney > 10)
+            {
+                return "Are you kidding me? This amount can buy us a new smurf village!";
+            }
+            else if (amountOfMoney == 0)
+            {
+                return "I cannot buy anything with this!";
+            }
+            else
+            {
+                throw new Exception("negative values or wrong value type");
+            }
+        }
+
+        public string Cook()
+        {
+            return "No matter what the gender is, smurf is always seen as a masterchef!";
+        }
+    }
+}
